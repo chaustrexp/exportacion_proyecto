@@ -1,0 +1,319 @@
+/* ============================================
+   TEMA MEJORADO SENA - ENCAPSULADO
+   No modifica estilos existentes del dashboard
+   ============================================ */
+
+/* Variables del nuevo tema (no sobrescribe :root existente) */
+.sena-enhanced-theme {
+    /* SENA Green Palette */
+    --theme-primary-green: #39A900;
+    --theme-secondary-green: #007832;
+    --theme-light-green: #E8F5E8;
+    --theme-dark-green: #2D7A00;
+    
+    /* Elegant Blue Theme */
+    --theme-primary-blue: #1565C0;
+    --theme-light-blue: #BBDEFB;
+    --theme-glass-blue: rgba(21, 101, 192, 0.08);
+    
+    /* Grays */
+    --theme-white: #ffffff;
+    --theme-gray-50: #f9fafb;
+    --theme-gray-100: #f3f4f6;
+    --theme-gray-200: #e5e7eb;
+    --theme-gray-300: #d1d5db;
+    --theme-gray-400: #9ca3af;
+    --theme-gray-500: #6b7280;
+    --theme-gray-600: #4b5563;
+    --theme-gray-700: #374151;
+    --theme-gray-800: #1f2937;
+    --theme-gray-900: #111827;
+    
+    /* Shadows */
+    --theme-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --theme-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   MEJORAS VISUALES ENCAPSULADAS
+   ============================================ */
+
+/* Mejora de Cards/Stats */
+.sena-enhanced-theme .stat-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--theme-gray-200);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sena-enhanced-theme .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Mejora de Tablas */
+.sena-enhanced-theme .table-container,
+.sena-enhanced-theme .table-section {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--theme-gray-200);
+}
+
+.sena-enhanced-theme table tbody tr:hover {
+    background: var(--theme-light-green);
+    transform: scale(1.002);
+}
+
+/* Mejora de Botones */
+.sena-enhanced-theme .btn-primary {
+    background: linear-gradient(135deg, var(--theme-primary-green), var(--theme-secondary-green));
+    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.25);
+    transition: all 0.3s ease;
+}
+
+.sena-enhanced-theme .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(57, 169, 0, 0.35);
+}
+
+/* Mejora de Formularios */
+.sena-enhanced-theme .form-control:focus {
+    border-color: var(--theme-primary-green);
+    box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+}
+
+/* Mejora de Badges */
+.sena-enhanced-theme .badge {
+    backdrop-filter: blur(8px);
+    box-shadow: var(--theme-shadow-sm);
+}
+
+/* Mejora de Sidebar (opcional - solo si se aplica la clase) */
+.sena-enhanced-theme.sidebar-enhanced .sidebar {
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+}
+
+.sena-enhanced-theme.sidebar-enhanced .nav-link {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sena-enhanced-theme.sidebar-enhanced .nav-link:hover {
+    transform: translateX(6px);
+}
+
+/* Mejora de Dashboard Header */
+.sena-enhanced-theme .dashboard-header {
+    background: linear-gradient(135deg, rgba(57, 169, 0, 0.08) 0%, rgba(0, 120, 50, 0.08) 100%);
+    border: 1px solid rgba(57, 169, 0, 0.15);
+}
+
+/* Mejora de Iconos */
+.sena-enhanced-theme .stat-icon,
+.sena-enhanced-theme .stat-card-icon {
+    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.2);
+}
+
+/* Mejora de Alerts */
+.sena-enhanced-theme .alert {
+    backdrop-filter: blur(8px);
+    border-width: 2px;
+}
+
+/* Mejora de Modales */
+.sena-enhanced-theme .modal-content {
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejora de Scrollbar */
+.sena-enhanced-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.sena-enhanced-theme ::-webkit-scrollbar-track {
+    background: var(--theme-gray-100);
+    border-radius: 10px;
+}
+
+.sena-enhanced-theme ::-webkit-scrollbar-thumb {
+    background: var(--theme-gray-400);
+    border-radius: 10px;
+}
+
+.sena-enhanced-theme ::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-primary-green);
+}
+
+/* ============================================
+   ANIMACIONES SUAVES
+   ============================================ */
+
+.sena-enhanced-theme .fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sena-enhanced-theme .slide-in {
+    animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   MEJORAS RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .sena-enhanced-theme .stat-card {
+        padding: 20px;
+    }
+    
+    .sena-enhanced-theme .table-container {
+        overflow-x: auto;
+    }
+}
+
+/* ============================================
+   UTILIDADES ADICIONALES
+   ============================================ */
+
+.sena-enhanced-theme .glass-effect {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.sena-enhanced-theme .shadow-elevated {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.sena-enhanced-theme .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   MEJORAS ESPECÍFICAS POR COMPONENTE
+   ============================================ */
+
+/* Stats Grid Mejorado */
+.sena-enhanced-theme .stats-grid {
+    gap: 24px;
+}
+
+/* Table Section Mejorado */
+.sena-enhanced-theme .section-header {
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--theme-gray-100);
+}
+
+/* Form Card Mejorado */
+.sena-enhanced-theme .form-card {
+    box-shadow: var(--theme-shadow-lg);
+}
+
+/* Navigation Mejorado */
+.sena-enhanced-theme .nav-link.active {
+    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.3);
+}
+
+/* User Profile Mejorado */
+.sena-enhanced-theme .user-profile:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================
+   MODO OSCURO (OPCIONAL)
+   ============================================ */
+
+.sena-enhanced-theme.dark-mode {
+    --theme-white: #1f2937;
+    --theme-gray-50: #374151;
+    --theme-gray-900: #f9fafb;
+}
+
+.sena-enhanced-theme.dark-mode .stat-card {
+    background: rgba(31, 41, 55, 0.95) !important;
+    color: var(--theme-gray-50);
+}
+
+.sena-enhanced-theme.dark-mode .table-container {
+    background: rgba(31, 41, 55, 0.98);
+}
+
+/* ============================================
+   NOTAS DE USO
+   ============================================
+   
+   Para aplicar este tema:
+   
+   1. Agregar la clase al body o contenedor principal:
+      <body class="sena-enhanced-theme">
+   
+   2. O aplicar solo a secciones específicas:
+      <div class="main-content sena-enhanced-theme">
+   
+   3. Para sidebar mejorado:
+      <aside class="sidebar sena-enhanced-theme sidebar-enhanced">
+   
+   4. Para modo oscuro:
+      <body class="sena-enhanced-theme dark-mode">
+   
+   ============================================ */
+
+
+/* ============================================
+   HEADER MEJORADO - ESTILOS
+   ============================================ */
+
+/* Responsive para navbar */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 10px 24px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 8px 16px !important;
+        gap: 12px !important;
+    }
+    
+    .navbar-title h1 {
+        font-size: 14px !important;
+    }
+    
+    .btn-logout span {
+        display: none !important;
+    }
+    
+    .btn-logout {
+        padding: 6px 8px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-title h1 {
+        font-size: 13px !important;
+    }
+}

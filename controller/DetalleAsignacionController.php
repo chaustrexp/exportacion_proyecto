@@ -58,9 +58,9 @@ class DetalleAsignacionController extends BaseController {
     public function store() {
         // Validar datos requeridos
         $errors = $this->validate($_POST, [
-            'ASIGNACION_ASIG_ID',
-            'detasig_hora_ini',
-            'detasig_hora_fin'
+            'asignacion_id',
+            'hora_inicio',
+            'hora_fin'
         ]);
         
         if (!empty($errors)) {
@@ -146,9 +146,9 @@ class DetalleAsignacionController extends BaseController {
     public function update($id) {
         // Validar datos requeridos
         $errors = $this->validate($_POST, [
-            'ASIGNACION_ASIG_ID',
-            'detasig_hora_ini',
-            'detasig_hora_fin'
+            'asignacion_id',
+            'hora_inicio',
+            'hora_fin'
         ]);
         
         if (!empty($errors)) {

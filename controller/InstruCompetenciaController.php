@@ -106,6 +106,9 @@ class InstruCompetenciaController extends BaseController {
      * Guardar nueva asignación
      */
     public function store() {
+        // DEBUG: Ver qué datos están llegando
+        error_log('POST Data: ' . print_r($_POST, true));
+        
         // Validar datos requeridos
         $errors = $this->validate($_POST, [
             'INSTRUCTOR_inst_id',
@@ -113,6 +116,11 @@ class InstruCompetenciaController extends BaseController {
             'COMPETxPROGRAMA_COMPETENCIA_comp_id',
             'inscomp_vigencia'
         ]);
+        
+        // DEBUG: Ver errores de validación
+        if (!empty($errors)) {
+            error_log('Validation Errors: ' . print_r($errors, true));
+        }
         
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;

@@ -238,6 +238,7 @@ Ver: `SOLUCION_NOMBRES_TABLAS.md`
 
 ## 📚 Documentación Adicional
 
+- **`DOCUMENTACION_COMPLETA.md`** - 📖 Documentación completa unificada (instalación, despliegue, contribución)
 - `INSTRUCCIONES_INSTALACION.md` - Guía detallada de instalación
 - `SOLUCION_NOMBRES_TABLAS.md` - Solución a errores de tablas
 - `INSTRUCCIONES_CORRECCION_BD.md` - Correcciones de base de datos

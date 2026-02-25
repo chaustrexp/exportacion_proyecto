@@ -76,7 +76,9 @@ abstract class BaseController {
     protected function validate($data, $required) {
         $errors = [];
         foreach ($required as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
+            // Usar isset y verificar que no sea string vacío
+            // Permite 0 como valor válido
+            if (!isset($data[$field]) || (is_string($data[$field]) && trim($data[$field]) === '')) {
                 $errors[$field] = "El campo {$field} es requerido";
             }
         }

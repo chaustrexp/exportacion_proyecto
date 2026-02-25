@@ -9,7 +9,7 @@
         <form method="POST">
             <div class="form-group">
                 <label>Asignación *</label>
-                <select name="ASIGNACION_ASIG_ID" class="form-control" required>
+                <select name="asignacion_id" class="form-control" required>
                     <option value="">Seleccione...</option>
                     <?php foreach ($asignaciones as $asignacion): ?>
                         <?php 
@@ -25,11 +25,11 @@
             </div>
             <div class="form-group">
                 <label>Hora Inicio *</label>
-                <input type="datetime-local" name="detasig_hora_ini" class="form-control" required>
+                <input type="datetime-local" name="hora_inicio" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Hora Fin *</label>
-                <input type="datetime-local" name="detasig_hora_fin" class="form-control" required>
+                <input type="datetime-local" name="hora_fin" class="form-control" required>
             </div>
             <div class="btn-group">
                 <button type="submit" class="btn btn-primary">Guardar</button>

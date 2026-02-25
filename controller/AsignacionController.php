@@ -98,7 +98,13 @@ class AsignacionController extends BaseController {
         
         try {
             $this->model->create($_POST);
-            $this->redirect(BASE_PATH . 'asignacion?msg=creado');
+            
+            $redirectUrl = BASE_PATH . 'asignacion?msg=creado';
+            if ($this->post('redirect_to')) {
+                $redirectUrl .= '&tab=' . $this->post('redirect_to');
+            }
+            
+            $this->redirect($redirectUrl);
         } catch (Exception $e) {
             $_SESSION['error'] = 'Error al crear la asignación: ' . $e->getMessage();
             $_SESSION['old_input'] = $_POST;

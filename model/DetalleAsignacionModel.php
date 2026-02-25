@@ -40,29 +40,30 @@ class DetalleAsignacionModel {
     }
     
     public function create($data) {
+        // Mapear nombres simplificados a nombres de BD
+        $asignacion_id = $data['asignacion_id'] ?? $data['asignacion_asig_id'] ?? null;
+        $hora_ini = $data['hora_inicio'] ?? $data['detasig_hora_ini'] ?? null;
+        $hora_fin = $data['hora_fin'] ?? $data['detasig_hora_fin'] ?? null;
+        
         $stmt = $this->db->prepare("
             INSERT INTO detallexasignacion (asignacion_asig_id, detasig_hora_ini, detasig_hora_fin) 
             VALUES (?, ?, ?)
         ");
-        return $stmt->execute([
-            $data['asignacion_asig_id'],
-            $data['detasig_hora_ini'],
-            $data['detasig_hora_fin']
-        ]);
+        return $stmt->execute([$asignacion_id, $hora_ini, $hora_fin]);
     }
     
     public function update($id, $data) {
+        // Mapear nombres simplificados a nombres de BD
+        $asignacion_id = $data['asignacion_id'] ?? $data['asignacion_asig_id'] ?? null;
+        $hora_ini = $data['hora_inicio'] ?? $data['detasig_hora_ini'] ?? null;
+        $hora_fin = $data['hora_fin'] ?? $data['detasig_hora_fin'] ?? null;
+        
         $stmt = $this->db->prepare("
             UPDATE detallexasignacion 
             SET asignacion_asig_id = ?, detasig_hora_ini = ?, detasig_hora_fin = ?
             WHERE detasig_id = ?
         ");
-        return $stmt->execute([
-            $data['asignacion_asig_id'],
-            $data['detasig_hora_ini'],
-            $data['detasig_hora_fin'],
-            $id
-        ]);
+        return $stmt->execute([$asignacion_id, $hora_ini, $hora_fin, $id]);
     }
     
     public function delete($id) {

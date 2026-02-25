@@ -34,6 +34,54 @@ $registros = $data['registros'] ?? [];
         </div>
     <?php endif; ?>
 
+    <!-- Filtros -->
+    <div style="padding: 0 32px 24px;">
+        <?php include __DIR__ . '/../components/filtros.php'; ?>
+        
+        <div class="filtros-container">
+            <div class="filtros-header">
+                <h3>
+                    <i data-lucide="filter" style="width: 18px; height: 18px;"></i>
+                    Filtros
+                </h3>
+                <button onclick="limpiarFiltros('form-filtros-coordinacion')" class="btn-limpiar-filtros">
+                    Limpiar Filtros
+                </button>
+            </div>
+            
+            <form id="form-filtros-coordinacion">
+                <div class="filtros-grid">
+                    <div class="filtro-group">
+                        <label for="filtro-nombre">Nombre</label>
+                        <input type="text" id="filtro-nombre" name="nombre" placeholder="Buscar por nombre..." />
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-centro">Centro de Formación</label>
+                        <select id="filtro-centro" name="centro">
+                            <option value="">Todos</option>
+                            <?php
+                            // Obtener centros únicos
+                            $centros = array_unique(array_column($registros, 'cent_nombre'));
+                            foreach ($centros as $centro):
+                                if ($centro):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($centro); ?>">
+                                    <?php echo htmlspecialchars($centro); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="filtros-activos-form-filtros-coordinacion" class="filtros-activos"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Stats -->
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 32px;">
         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
@@ -51,7 +99,7 @@ $registros = $data['registros'] ?? [];
     <!-- Table -->
     <div style="padding: 0 32px 32px;">
         <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
+            <table id="tabla-datos" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Nombre</th>
@@ -71,10 +119,10 @@ $registros = $data['registros'] ?? [];
                     <?php else: ?>
                         <?php foreach ($registros as $registro): ?>
                         <tr style="border-bottom: 1px solid #f3f4f6;">
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="nombre">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['coord_nombre']); ?></div>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="centro">
                                 <span style="background: #F5F3FF; color: #a855f7; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
                                     <?php echo htmlspecialchars($registro['cent_nombre'] ?? 'Sin centro'); ?>
                                 </span>
@@ -99,4 +147,22 @@ $registros = $data['registros'] ?? [];
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
+    
+    // Filtros en tiempo real
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('form-filtros-coordinacion');
+        const inputs = form.querySelectorAll('input, select');
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const filtros = {
+                    nombre: document.getElementById('filtro-nombre').value,
+                    centro: document.getElementById('filtro-centro').value
+                };
+                
+                filtrarTabla(filtros);
+                actualizarFiltrosActivos(filtros, 'form-filtros-coordinacion');
+            });
+        });
+    });
 </script>

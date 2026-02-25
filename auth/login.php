@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['usuario_nombre'] = $usuario['nombre'];
                     $_SESSION['usuario_email'] = $usuario['email'];
                     $_SESSION['usuario_rol'] = $usuario['rol'];
+                    $_SESSION['instructor_id'] = $usuario['instructor_id']; // Agregar instructor_id
                     
                     // Actualizar último acceso
                     $stmt = $db->prepare("UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?");

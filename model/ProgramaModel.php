@@ -10,9 +10,12 @@ class ProgramaModel {
     
     public function getAll() {
         $stmt = $this->db->query("
-            SELECT p.*, tp.titpro_nombre 
+            SELECT p.*, tp.titpro_nombre,
+                   GROUP_CONCAT(DISTINCT f.fich_numero ORDER BY f.fich_numero SEPARATOR ', ') as fichas_numeros
             FROM programa p
             LEFT JOIN titulo_programa tp ON p.titulo_programa_titpro_id = tp.titpro_id
+            LEFT JOIN ficha f ON f.PROGRAMA_prog_id = p.prog_codigo
+            GROUP BY p.prog_codigo
             ORDER BY p.prog_denominacion
         ");
         return $stmt->fetchAll();

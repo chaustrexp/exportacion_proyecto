@@ -139,10 +139,20 @@ if (isset($_SESSION['old_input'])) {
     function separarProgramaCompetencia() {
         const combo = document.getElementById('programa_competencia_combo');
         const valor = combo.value;
-        if (valor) {
+        
+        console.log('Valor seleccionado:', valor); // Debug
+        
+        if (valor && valor !== '') {
             const partes = valor.split('|');
-            document.getElementById('programa_id_hidden').value = partes[0];
-            document.getElementById('competencia_id_hidden').value = partes[1];
+            if (partes.length === 2) {
+                document.getElementById('programa_id_hidden').value = partes[0];
+                document.getElementById('competencia_id_hidden').value = partes[1];
+                console.log('Programa ID:', partes[0], 'Competencia ID:', partes[1]); // Debug
+            }
+        } else {
+            // Limpiar campos si no hay selección
+            document.getElementById('programa_id_hidden').value = '';
+            document.getElementById('competencia_id_hidden').value = '';
         }
     }
     
@@ -154,15 +164,34 @@ if (isset($_SESSION['old_input'])) {
         }
     });
     
-    // Validar antes de enviar
+    // Validar antes de enviar - MEJORADO
     document.getElementById('formCrear').addEventListener('submit', function(e) {
+        // Intentar separar una última vez antes de validar
+        separarProgramaCompetencia();
+        
+        const combo = document.getElementById('programa_competencia_combo');
         const programaId = document.getElementById('programa_id_hidden').value;
         const competenciaId = document.getElementById('competencia_id_hidden').value;
         
-        if (!programaId || !competenciaId) {
+        console.log('Validación final - Combo:', combo.value, 'Programa:', programaId, 'Competencia:', competenciaId); // Debug
+        
+        // Validar que el combo tenga un valor seleccionado
+        if (!combo.value || combo.value === '') {
             e.preventDefault();
             alert('Por favor seleccione una combinación de Programa y Competencia');
             return false;
         }
+        
+        // Validar que los campos hidden tengan valores
+        if (!programaId || programaId === '' || !competenciaId || competenciaId === '') {
+            e.preventDefault();
+            alert('Error al procesar la selección. Por favor intente nuevamente.');
+            // Intentar separar de nuevo
+            separarProgramaCompetencia();
+            return false;
+        }
+        
+        // Todo OK, permitir envío
+        return true;
     });
 </script>

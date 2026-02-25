@@ -19,9 +19,14 @@ $route = str_replace($basePath, '', $request);
 $route = strtok($route, '?'); // Remover query string
 $route = trim($route, '/');
 
-// Si la ruta está vacía o es 'index.php', ir al dashboard
+// Si la ruta está vacía o es 'index.php', redirigir según el rol
 if (empty($route) || $route === 'index.php') {
-    $route = 'dashboard';
+    // Redirigir según el rol del usuario
+    if ($_SESSION['usuario_rol'] === 'Instructor') {
+        $route = 'instructor_dashboard';
+    } else {
+        $route = 'dashboard';
+    }
 }
 
 // Parsear la ruta
@@ -74,6 +79,12 @@ $routes = [
         'file' => 'controller/DashboardController.php',
         'actions' => ['index'],
         'default_action' => 'index' // Siempre redirigir a index
+    ],
+    'instructor_dashboard' => [
+        'controller' => 'InstructorDashboardController',
+        'file' => 'controller/InstructorDashboardController.php',
+        'actions' => ['index', 'misFichas', 'misAsignaciones'],
+        'default_action' => 'index'
     ],
     'asignacion' => [
         'controller' => 'AsignacionController',

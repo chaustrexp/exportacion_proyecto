@@ -13,7 +13,7 @@ class CompetenciaProgramaModel {
             SELECT cp.*,
                    p.prog_denominacion,
                    c.comp_nombre_corto
-            FROM compet_programa cp
+            FROM competxprograma cp
             LEFT JOIN programa p ON cp.programa_prog_id = p.prog_codigo
             LEFT JOIN competencia c ON cp.competencia_comp_id = c.comp_id
             ORDER BY p.prog_denominacion, c.comp_nombre_corto
@@ -27,7 +27,7 @@ class CompetenciaProgramaModel {
                    c.comp_nombre_corto,
                    c.comp_nombre_unidad_competencia,
                    c.comp_horas
-            FROM compet_programa cp
+            FROM competxprograma cp
             LEFT JOIN competencia c ON cp.competencia_comp_id = c.comp_id
             WHERE cp.programa_prog_id = ?
         ");
@@ -37,7 +37,7 @@ class CompetenciaProgramaModel {
     
     public function create($data) {
         $stmt = $this->db->prepare("
-            INSERT INTO compet_programa (programa_prog_id, competencia_comp_id) 
+            INSERT INTO competxprograma (programa_prog_id, competencia_comp_id) 
             VALUES (?, ?)
         ");
         return $stmt->execute([
@@ -48,7 +48,7 @@ class CompetenciaProgramaModel {
     
     public function delete($programa_id, $competencia_id) {
         $stmt = $this->db->prepare("
-            DELETE FROM compet_programa 
+            DELETE FROM competxprograma 
             WHERE programa_prog_id = ? AND competencia_comp_id = ?
         ");
         return $stmt->execute([$programa_id, $competencia_id]);

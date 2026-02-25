@@ -39,6 +39,111 @@
         </div>
     <?php endif; ?>
 
+    <!-- Filtros -->
+    <div style="padding: 0 32px 24px;">
+        <?php include __DIR__ . '/../components/filtros.php'; ?>
+        
+        <div class="filtros-container">
+            <div class="filtros-header">
+                <h3>
+                    <i data-lucide="filter" style="width: 18px; height: 18px;"></i>
+                    Filtros
+                </h3>
+                <button onclick="limpiarFiltros('form-filtros-asignacion')" class="btn-limpiar-filtros">
+                    Limpiar Filtros
+                </button>
+            </div>
+            
+            <form id="form-filtros-asignacion">
+                <div class="filtros-grid">
+                    <div class="filtro-group">
+                        <label for="filtro-ficha">Ficha</label>
+                        <input type="text" id="filtro-ficha" name="ficha" placeholder="Buscar por número de ficha..." />
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-instructor">Instructor</label>
+                        <select id="filtro-instructor" name="instructor">
+                            <option value="">Todos</option>
+                            <?php
+                            $instructores = array_unique(array_column($registros, 'instructor_nombre'));
+                            foreach ($instructores as $inst):
+                                if ($inst):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($inst); ?>">
+                                    <?php echo htmlspecialchars($inst); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-programa">Programa</label>
+                        <select id="filtro-programa" name="programa">
+                            <option value="">Todos</option>
+                            <?php
+                            $programas = array_unique(array_column($registros, 'programa_nombre'));
+                            foreach ($programas as $prog):
+                                if ($prog):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($prog); ?>">
+                                    <?php echo htmlspecialchars($prog); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-ambiente">Ambiente</label>
+                        <select id="filtro-ambiente" name="ambiente">
+                            <option value="">Todos</option>
+                            <?php
+                            $ambientes = array_unique(array_column($registros, 'ambiente_nombre'));
+                            foreach ($ambientes as $amb):
+                                if ($amb && $amb !== 'N/A'):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($amb); ?>">
+                                    <?php echo htmlspecialchars($amb); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-fecha-desde">Fecha Desde</label>
+                        <input type="date" id="filtro-fecha-desde" name="fecha_desde" />
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-fecha-hasta">Fecha Hasta</label>
+                        <input type="date" id="filtro-fecha-hasta" name="fecha_hasta" />
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-estado">Estado</label>
+                        <select id="filtro-estado" name="estado">
+                            <option value="">Todos</option>
+                            <option value="Activa">Activa</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Finalizada">Finalizada</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="filtros-activos-form-filtros-asignacion" class="filtros-activos"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Stats -->
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 32px;">
         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
@@ -124,7 +229,7 @@
     <!-- Table -->
     <div id="table-view" style="padding: 0 32px 32px;">
         <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
+            <table id="tabla-datos" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">ID (Ficha)</th>
@@ -147,25 +252,27 @@
                     </tr>
                     <?php else: ?>
                         <?php foreach ($registros as $registro): ?>
-                        <tr style="border-bottom: 1px solid #f3f4f6;">
-                            <td style="padding: 16px;">
+                        <tr style="border-bottom: 1px solid #f3f4f6;" 
+                            data-fecha-inicio="<?php echo $registro['asig_fecha_inicio'] ?? ''; ?>"
+                            data-fecha-fin="<?php echo $registro['asig_fecha_fin'] ?? ''; ?>">
+                            <td style="padding: 16px;" data-filtro="ficha">
                                 <strong style="color: #ec4899; font-size: 14px;">
                                     <?php echo str_pad(htmlspecialchars($registro['ficha_numero'] ?? ''), 8, '0', STR_PAD_LEFT); ?>
                                 </strong>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="programa">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['programa_nombre'] ?? 'N/A'); ?></div>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="instructor">
                                 <div style="color: #6b7280;"><?php echo htmlspecialchars($registro['instructor_nombre'] ?? ''); ?></div>
                             </td>
-                            <td style="padding: 16px; color: #6b7280;">
+                            <td style="padding: 16px; color: #6b7280;" data-filtro="ambiente">
                                 <?php echo htmlspecialchars($registro['ambiente_nombre'] ?? 'N/A'); ?>
                             </td>
                             <td style="padding: 16px; color: #6b7280;">
                                 <?php echo isset($registro['asig_fecha_inicio']) ? date('d/m/Y', strtotime($registro['asig_fecha_inicio'])) : 'N/A'; ?>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="estado">
                                 <?php 
                                 $hoy = date('Y-m-d');
                                 $fecha_inicio = $registro['asig_fecha_inicio'] ?? '';
@@ -211,6 +318,82 @@
             });
         }
     });
+
+    // Filtros en tiempo real para asignaciones
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('form-filtros-asignacion');
+        if (form) {
+            const inputs = form.querySelectorAll('input, select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const filtros = {
+                        ficha: document.getElementById('filtro-ficha').value,
+                        instructor: document.getElementById('filtro-instructor').value,
+                        programa: document.getElementById('filtro-programa').value,
+                        ambiente: document.getElementById('filtro-ambiente').value,
+                        fecha_desde: document.getElementById('filtro-fecha-desde').value,
+                        fecha_hasta: document.getElementById('filtro-fecha-hasta').value,
+                        estado: document.getElementById('filtro-estado').value
+                    };
+                    
+                    filtrarAsignaciones(filtros);
+                    actualizarFiltrosActivos(filtros, 'form-filtros-asignacion');
+                });
+            });
+        }
+    });
+    
+    // Función especial para filtrar asignaciones con fechas
+    function filtrarAsignaciones(filtros) {
+        const tabla = document.getElementById('tabla-datos');
+        if (!tabla) return;
+        
+        const filas = tabla.querySelectorAll('tbody tr');
+        let filasVisibles = 0;
+        
+        filas.forEach(fila => {
+            // Skip empty state row
+            if (fila.cells.length <= 1) return;
+            
+            let mostrar = true;
+            
+            // Filtros de texto normales
+            ['ficha', 'instructor', 'programa', 'ambiente', 'estado'].forEach(campo => {
+                if (filtros[campo]) {
+                    const celda = fila.querySelector(`[data-filtro="${campo}"]`);
+                    if (celda) {
+                        const texto = celda.textContent.toLowerCase();
+                        if (!texto.includes(filtros[campo].toLowerCase())) {
+                            mostrar = false;
+                        }
+                    }
+                }
+            });
+            
+            // Filtro de fecha desde
+            if (filtros.fecha_desde && mostrar) {
+                const fechaInicio = fila.getAttribute('data-fecha-inicio');
+                if (fechaInicio && fechaInicio < filtros.fecha_desde) {
+                    mostrar = false;
+                }
+            }
+            
+            // Filtro de fecha hasta
+            if (filtros.fecha_hasta && mostrar) {
+                const fechaFin = fila.getAttribute('data-fecha-fin');
+                if (fechaFin && fechaFin > filtros.fecha_hasta) {
+                    mostrar = false;
+                }
+            }
+            
+            fila.style.display = mostrar ? '' : 'none';
+            if (mostrar) filasVisibles++;
+        });
+        
+        // Mostrar mensaje si no hay resultados
+        mostrarMensajeSinResultados(tabla, filasVisibles);
+    }
 
     // Tab switching
     function showTab(tab) {
@@ -778,6 +961,7 @@
 
                             <!-- Contenido -->
                             <form id="createForm" method="POST" action="<?php echo BASE_PATH; ?>asignacion/crear" onsubmit="return validateForm(event)">
+                                <input type="hidden" name="redirect_to" value="calendar">
                                 <div style="padding: 24px;">
                                     
                                     <!-- Sección: Información del Evento -->
@@ -1025,8 +1209,9 @@ function abrirModalNuevaAsignacion(date = null) {
                 </div>
 
                 <!-- Formulario -->
-                <form method="POST" action="" style="padding: 24px;">
+                <form method="POST" action="<?php echo BASE_PATH; ?>asignacion/crear" style="padding: 24px;">
                     <input type="hidden" name="crear_asignacion" value="1">
+                    <input type="hidden" name="redirect_to" value="calendar">
                     
                     <!-- ID Asignación (auto) -->
                     <div style="margin-bottom: 20px;">
@@ -1132,6 +1317,18 @@ function cerrarModal() {
         modal.remove();
     }
 }
+
+// Lógica para detectar si se debe mostrar la pestaña de calendario al cargar
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tab') === 'calendar') {
+        showTab('calendar');
+        
+        // Limpiar el parámetro de la URL sin recargar para que no persista si el usuario recarga manualmente
+        const newUrl = window.location.pathname + window.location.search.replace(/[&?]tab=calendar/, '').replace(/^&/, '?');
+        window.history.replaceState({}, '', newUrl);
+    }
+});
 </script>
 
 <?php // Footer incluido por BaseController ?>

@@ -29,6 +29,69 @@
         </div>
     <?php endif; ?>
 
+    <!-- Filtros -->
+    <div style="padding: 0 32px 24px;">
+        <?php include __DIR__ . '/../components/filtros.php'; ?>
+        
+        <div class="filtros-container">
+            <div class="filtros-header">
+                <h3>
+                    <i data-lucide="filter" style="width: 18px; height: 18px;"></i>
+                    Filtros
+                </h3>
+                <button onclick="limpiarFiltros('form-filtros-programa')" class="btn-limpiar-filtros">
+                    Limpiar Filtros
+                </button>
+            </div>
+            
+            <form id="form-filtros-programa">
+                <div class="filtros-grid">
+                    <div class="filtro-group">
+                        <label for="filtro-ficha">Número de Ficha</label>
+                        <input type="text" id="filtro-ficha" name="ficha" placeholder="Buscar por número de ficha..." />
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-nombre">Nombre del Programa</label>
+                        <input type="text" id="filtro-nombre" name="nombre" placeholder="Buscar por nombre..." />
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-tipo">Tipo</label>
+                        <select id="filtro-tipo" name="tipo">
+                            <option value="">Todos</option>
+                            <option value="Técnico">Técnico</option>
+                            <option value="Tecnólogo">Tecnólogo</option>
+                            <option value="Especialización">Especialización</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-titulo">Título</label>
+                        <select id="filtro-titulo" name="titulo">
+                            <option value="">Todos</option>
+                            <?php
+                            // Obtener títulos únicos
+                            $titulos = array_unique(array_column($registros, 'titpro_nombre'));
+                            foreach ($titulos as $titulo):
+                                if ($titulo):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($titulo); ?>">
+                                    <?php echo htmlspecialchars($titulo); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="filtros-activos-form-filtros-programa" class="filtros-activos"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Stats Minimalistas (solo 2 cards) -->
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 32px;">
         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
@@ -46,10 +109,10 @@
     <!-- Table Limpia -->
     <div style="padding: 0 32px 32px;">
         <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
+            <table id="tabla-datos" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
-                        <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Código</th>
+                        <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Fichas</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Nombre del Programa</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Tipo</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Título</th>
@@ -68,16 +131,16 @@
                     <?php else: ?>
                         <?php foreach ($registros as $registro): ?>
                         <tr style="border-bottom: 1px solid #f3f4f6; transition: background 0.2s;">
-                            <td style="padding: 16px;">
-                                <strong style="color: #39A900; font-size: 14px;"><?php echo $registro['prog_codigo']; ?></strong>
+                            <td style="padding: 16px;" data-filtro="ficha">
+                                <strong style="color: #39A900; font-size: 14px;"><?php echo htmlspecialchars($registro['fichas_numeros'] ?? 'Sin fichas'); ?></strong>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="nombre">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['prog_denominacion']); ?></div>
                             </td>
-                            <td style="padding: 16px; color: #6b7280;">
+                            <td style="padding: 16px; color: #6b7280;" data-filtro="tipo">
                                 <?php echo htmlspecialchars($registro['prog_tipo'] ?? 'No especificado'); ?>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="titulo">
                                 <span style="background: #E8F5E8; color: #39A900; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
                                     <?php echo htmlspecialchars($registro['titpro_nombre'] ?? 'Sin título'); ?>
                                 </span>
@@ -119,4 +182,24 @@
             window.location.href = `<?php echo BASE_PATH; ?>programa/delete/${id}`;
         }
     }
+    
+    // Filtros en tiempo real
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('form-filtros-programa');
+        const inputs = form.querySelectorAll('input, select');
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const filtros = {
+                    ficha: document.getElementById('filtro-ficha').value,
+                    nombre: document.getElementById('filtro-nombre').value,
+                    tipo: document.getElementById('filtro-tipo').value,
+                    titulo: document.getElementById('filtro-titulo').value
+                };
+                
+                filtrarTabla(filtros);
+                actualizarFiltrosActivos(filtros, 'form-filtros-programa');
+            });
+        });
+    });
 </script>

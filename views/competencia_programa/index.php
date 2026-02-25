@@ -35,6 +35,67 @@
         </div>
     <?php endif; ?>
 
+    <!-- Filtros -->
+    <div style="padding: 0 32px 24px;">
+        <?php include __DIR__ . '/../components/filtros.php'; ?>
+        
+        <div class="filtros-container">
+            <div class="filtros-header">
+                <h3>
+                    <i data-lucide="filter" style="width: 18px; height: 18px;"></i>
+                    Filtros
+                </h3>
+                <button onclick="limpiarFiltros('form-filtros-competencia-programa')" class="btn-limpiar-filtros">
+                    Limpiar Filtros
+                </button>
+            </div>
+            
+            <form id="form-filtros-competencia-programa">
+                <div class="filtros-grid">
+                    <div class="filtro-group">
+                        <label for="filtro-competencia">Competencia</label>
+                        <select id="filtro-competencia" name="competencia">
+                            <option value="">Todas</option>
+                            <?php
+                            $competencias = array_unique(array_column($registros, 'comp_nombre_corto'));
+                            foreach ($competencias as $comp):
+                                if ($comp):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($comp); ?>">
+                                    <?php echo htmlspecialchars($comp); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="filtro-group">
+                        <label for="filtro-programa">Programa</label>
+                        <select id="filtro-programa" name="programa">
+                            <option value="">Todos</option>
+                            <?php
+                            $programas = array_unique(array_column($registros, 'prog_denominacion'));
+                            foreach ($programas as $prog):
+                                if ($prog):
+                            ?>
+                                <option value="<?php echo htmlspecialchars($prog); ?>">
+                                    <?php echo htmlspecialchars($prog); ?>
+                                </option>
+                            <?php 
+                                endif;
+                            endforeach; 
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="filtros-activos-form-filtros-competencia-programa" class="filtros-activos"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Stats -->
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 32px;">
         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
@@ -52,7 +113,7 @@
     <!-- Table -->
     <div style="padding: 0 32px 32px;">
         <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
+            <table id="tabla-datos" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Competencia</th>
@@ -73,13 +134,13 @@
                     <?php else: ?>
                         <?php foreach ($registros as $registro): ?>
                         <tr style="border-bottom: 1px solid #f3f4f6;">
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="competencia">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['comp_nombre_corto'] ?? ''); ?></div>
                                 <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
                                     ID: <?php echo htmlspecialchars($registro['COMPETENCIA_comp_id'] ?? 'N/A'); ?>
                                 </div>
                             </td>
-                            <td style="padding: 16px;">
+                            <td style="padding: 16px;" data-filtro="programa">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['prog_denominacion'] ?? ''); ?></div>
                                 <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
                                     Código: <?php echo htmlspecialchars($registro['PROGRAMA_prog_id'] ?? 'N/A'); ?>
@@ -125,4 +186,24 @@
             window.location.href = `<?php echo BASE_PATH; ?>competencia_programa/eliminar?programa_id=${programaId}&competencia_id=${competenciaId}`;
         }
     }
+    
+    // Filtros en tiempo real
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('form-filtros-competencia-programa');
+        if (form) {
+            const inputs = form.querySelectorAll('input, select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const filtros = {
+                        competencia: document.getElementById('filtro-competencia').value,
+                        programa: document.getElementById('filtro-programa').value
+                    };
+                    
+                    filtrarTabla(filtros);
+                    actualizarFiltrosActivos(filtros, 'form-filtros-competencia-programa');
+                });
+            });
+        }
+    });
 </script>

@@ -4,10 +4,17 @@
         <!-- Header de la tabla -->
         <div style="padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h2 style="font-size: 18px; font-weight: 700; color: #1f2937; margin: 0 0 4px;">Últimas Asignaciones</h2>
-                <p style="font-size: 13px; color: #6b7280; margin: 0;">Asignaciones recientes del sistema</p>
+                <?php 
+                $esInstructor = (($_SESSION['usuario_rol'] ?? $_SESSION['rol'] ?? '') === 'Instructor');
+                ?>
+                <h2 style="font-size: 18px; font-weight: 700; color: #1f2937; margin: 0 0 4px;">
+                    <?php echo $esInstructor ? 'Asignaciones' : 'Últimas Asignaciones'; ?>
+                </h2>
+                <p style="font-size: 13px; color: #6b7280; margin: 0;">
+                    <?php echo $esInstructor ? 'Listado de tus asignaciones' : 'Asignaciones recientes del sistema'; ?>
+                </p>
             </div>
-            <a href="<?php echo BASE_PATH; ?>asignacion/index" class="btn btn-secondary btn-sm">
+            <a href="<?php echo BASE_PATH . ($esInstructor ? 'instructor_dashboard/misAsignaciones' : 'asignacion/index'); ?>" class="btn btn-secondary btn-sm">
                 Ver todas
             </a>
         </div>
@@ -18,7 +25,11 @@
                 <thead>
                     <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
                         <th style="padding: 12px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Ficha</th>
+                        <?php if (!$esInstructor): ?>
                         <th style="padding: 12px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Instructor</th>
+                        <?php else: ?>
+                        <th style="padding: 12px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Competencia</th>
+                        <?php endif; ?>
                         <th style="padding: 12px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Ambiente</th>
                         <th style="padding: 12px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Fecha Inicio</th>
                         <th style="padding: 12px 24px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Fecha Fin</th>
@@ -40,7 +51,13 @@
                                 <strong style="color: #1f2937;"><?php echo safeHtml($asignacion, 'ficha_numero'); ?></strong>
                             </td>
                             <td style="padding: 16px 24px; color: #6b7280;">
-                                <?php echo safeHtml($asignacion, 'instructor_nombre'); ?>
+                                <?php if (!$esInstructor): ?>
+                                    <?php echo safeHtml($asignacion, 'instructor_nombre'); ?>
+                                <?php else: ?>
+                                    <span title="<?php echo safeHtml($asignacion, 'competencia_nombre'); ?>">
+                                        <?php echo safeHtml($asignacion, 'competencia_nombre'); ?>
+                                    </span>
+                                <?php endif; ?>
                             </td>
                             <td style="padding: 16px 24px; color: #6b7280;">
                                 <?php echo safeHtml($asignacion, 'ambiente_nombre'); ?>

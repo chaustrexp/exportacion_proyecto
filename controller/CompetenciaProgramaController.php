@@ -24,6 +24,7 @@ class CompetenciaProgramaController extends BaseController {
      * Listar todas las relaciones competencia-programa
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         
         $data = [

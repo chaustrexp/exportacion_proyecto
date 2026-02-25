@@ -30,27 +30,63 @@ class DashboardController extends BaseController {
      * Página principal del dashboard
      */
     public function index() {
-        // Definir título de la página ANTES de cargar el header
+        // Obtener rol e ID de sesión
+        $rol = $_SESSION['usuario_rol'] ?? $_SESSION['rol'] ?? '';
+        $usuario_id = $_SESSION['usuario_id'] ?? $_SESSION['id'] ?? null;
+        $instructor_id = $_SESSION['instructor_id'] ?? null;
+        $esInstructor = ($rol === 'Instructor');
+
+        // Definir título de la página
         $pageTitle = 'Dashboard Principal';
+        if ($rol === 'Instructor') $pageTitle = 'Mi Dashboard - Instructor';
+        if ($rol === 'Coordinador') $pageTitle = 'Panel de Coordinación Académica';
         
         try {
-            // Obtener estadísticas
-            $totalProgramas = $this->programaModel->count();
-            $totalFichas = $this->fichaModel->count();
-            $totalInstructores = $this->instructorModel->count();
-            $totalAmbientes = $this->ambienteModel->count();
-            $totalAsignaciones = $this->asignacionModel->count();
-            $asignacionesActivas = $this->asignacionModel->countActivas();
-            $asignacionesFinalizadas = $this->asignacionModel->countFinalizadas();
-            $asignacionesNoActivas = $this->asignacionModel->countNoActivas();
+            if ($rol === 'Instructor') {
+                // Estadísticas filtradas para el instructor
+                $totalFichas = $this->asignacionModel->countFichasByInstructor($instructor_id);
+                $totalAsignaciones = $this->asignacionModel->countByInstructor($instructor_id);
+                $asignacionesActivas = $this->asignacionModel->countActivasByInstructor($instructor_id);
+                $asignacionesFinalizadas = $this->asignacionModel->countFinalizadasByInstructor($instructor_id);
+                $asignacionesNoActivas = $this->asignacionModel->countNoActivasByInstructor($instructor_id);
+                
+                // Obtener últimas asignaciones del instructor
+                $ultimasAsignaciones = $this->asignacionModel->getRecentByInstructor($instructor_id, 5);
+                
+                // Próxima clase (la primera en el futuro)
+                $proximaClase = !empty($ultimasAsignaciones) ? $ultimasAsignaciones[0] : null;
+                
+                // Obtener asignaciones para el calendario (filtradas)
+                $asignacionesCalendario = $this->asignacionModel->getForCalendar(null, null, $instructor_id);
+            } elseif ($rol === 'Coordinador') {
+                // Estadísticas globales pero con enfoque en gestión para el Coordinador
+                $totalProgramas = $this->programaModel->count();
+                $totalFichas = $this->fichaModel->count();
+                $totalInstructores = $this->instructorModel->count();
+                $totalAmbientes = $this->ambienteModel->count();
+                
+                $totalAsignaciones = $this->asignacionModel->count();
+                $asignacionesActivas = $this->asignacionModel->countActivas();
+                $asignacionesFinalizadas = $this->asignacionModel->countFinalizadas();
+                
+                $ultimasAsignaciones = $this->asignacionModel->getRecent(5);
+                $asignacionesCalendario = $this->asignacionModel->getForCalendar();
+            } else {
+                // Administrador: Vista total del sistema
+                $totalProgramas = $this->programaModel->count();
+                $totalFichas = $this->fichaModel->count();
+                $totalInstructores = $this->instructorModel->count();
+                $totalAmbientes = $this->ambienteModel->count();
+                
+                $totalAsignaciones = $this->asignacionModel->count();
+                $asignacionesActivas = $this->asignacionModel->countActivas();
+                $asignacionesFinalizadas = $this->asignacionModel->countFinalizadas();
+                $asignacionesNoActivas = $this->asignacionModel->countNoActivas();
+                
+                $ultimasAsignaciones = $this->asignacionModel->getRecent(5);
+                $asignacionesCalendario = $this->asignacionModel->getForCalendar();
+            }
             
-            // Obtener últimas asignaciones
-            $ultimasAsignaciones = $this->asignacionModel->getRecent(5);
-            
-            // Obtener asignaciones para el calendario
-            $asignacionesCalendario = $this->asignacionModel->getForCalendar();
-            
-            // Datos para la vista
             $totalCompetenciasInstructor = 0;
             $competenciasVigentes = 0;
             

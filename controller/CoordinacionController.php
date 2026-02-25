@@ -20,6 +20,7 @@ class CoordinacionController extends BaseController {
      * Listar todas las coordinaciones
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         
         $this->render('index', [

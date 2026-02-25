@@ -15,13 +15,14 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['usuario_id'])) {
-    header('Location: ' . BASE_PATH . 'auth/login.php');
+    header('Location: ' . BASE_PATH . 'auth/index');
     exit;
 }
 
 // Función para verificar rol
 function verificarRol($rolesPermitidos) {
-    if (!in_array($_SESSION['usuario_rol'], $rolesPermitidos)) {
+    $rol = $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '';
+    if (!in_array($rol, $rolesPermitidos)) {
         header('Location: ' . BASE_PATH . 'index.php?error=acceso_denegado');
         exit;
     }
@@ -29,11 +30,11 @@ function verificarRol($rolesPermitidos) {
 
 // Función para obtener nombre del usuario
 function getNombreUsuario() {
-    return $_SESSION['usuario_nombre'] ?? 'Usuario';
+    return $_SESSION['nombre'] ?? $_SESSION['usuario_nombre'] ?? 'Usuario';
 }
 
 // Función para obtener rol del usuario
 function getRolUsuario() {
-    return $_SESSION['usuario_rol'] ?? 'Usuario';
+    return $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? 'Usuario';
 }
 ?>

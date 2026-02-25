@@ -14,6 +14,7 @@ class AmbienteController extends BaseController {
     }
     
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         
         $data = [

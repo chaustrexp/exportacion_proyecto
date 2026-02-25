@@ -15,7 +15,7 @@ $pageTitle = 'Mis Fichas - Instructor';
     <?php include __DIR__ . '/../layout/header.php'; ?>
     <?php include __DIR__ . '/../layout/sidebar.php'; ?>
     
-    <div class="main-content">
+    <div class="main-content sena-enhanced-theme">
         <div class="page-header">
             <h1>📚 Mis Fichas Asignadas</h1>
             <p>Listado completo de todas las fichas en las que participas</p>
@@ -40,10 +40,10 @@ $pageTitle = 'Mis Fichas - Instructor';
                                 <tr>
                                     <td><strong><?php echo htmlspecialchars($ficha['fich_numero']); ?></strong></td>
                                     <td><?php echo htmlspecialchars($ficha['prog_denominacion']); ?></td>
-                                    <td><span class="badge badge-success"><?php echo htmlspecialchars($ficha['prog_tipo']); ?></span></td>
-                                    <td><span class="badge badge-primary"><?php echo htmlspecialchars($ficha['fich_jornada']); ?></span></td>
+                                    <td><span class="badge-modern badge-tipo"><?php echo htmlspecialchars($ficha['prog_tipo']); ?></span></td>
+                                    <td><span class="badge-modern badge-jornada"><?php echo htmlspecialchars($ficha['fich_jornada']); ?></span></td>
                                     <td><?php echo htmlspecialchars($ficha['coord_nombre']); ?></td>
-                                    <td><?php echo $ficha['total_asignaciones']; ?></td>
+                                    <td><span class="badge-modern badge-asignas"><?php echo $ficha['total_asignaciones']; ?></span></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

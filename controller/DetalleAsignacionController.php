@@ -21,6 +21,7 @@ class DetalleAsignacionController extends BaseController {
      * Listar todos los detalles
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         
         $data = [

@@ -52,41 +52,77 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Mejora de Tablas */
-.sena-enhanced-theme .table-container,
-.sena-enhanced-theme .table-section {
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--theme-gray-200);
+/* Mejora de Tablas Premium */
+.sena-enhanced-theme .content-card {
+    background: var(--theme-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--theme-shadow-lg);
+    border: 1px solid var(--theme-gray-100);
+    overflow: hidden;
+    margin-bottom: 2rem;
 }
 
-.sena-enhanced-theme table tbody tr:hover {
-    background: var(--theme-light-green);
-    transform: scale(1.002);
+.sena-enhanced-theme table {
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
-/* Mejora de Botones */
-.sena-enhanced-theme .btn-primary {
-    background: linear-gradient(135deg, var(--theme-primary-green), var(--theme-secondary-green));
-    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.25);
-    transition: all 0.3s ease;
+.sena-enhanced-theme thead th {
+    background: linear-gradient(135deg, var(--theme-primary-green), var(--theme-secondary-green)) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.5rem !important;
+    border: none !important;
 }
 
-.sena-enhanced-theme .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(57, 169, 0, 0.35);
+.sena-enhanced-theme tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--theme-gray-100);
 }
 
-/* Mejora de Formularios */
-.sena-enhanced-theme .form-control:focus {
-    border-color: var(--theme-primary-green);
-    box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+.sena-enhanced-theme tbody tr:hover {
+    background-color: var(--theme-light-green) !important;
+    transform: none !important; /* Eliminamos el scale para mayor elegancia */
 }
 
-/* Mejora de Badges */
-.sena-enhanced-theme .badge {
-    backdrop-filter: blur(8px);
-    box-shadow: var(--theme-shadow-sm);
+.sena-enhanced-theme tbody td {
+    padding: 1.25rem 1.5rem !important;
+    color: var(--theme-gray-700);
+    vertical-align: middle;
+}
+
+/* Badges Modernos */
+.sena-enhanced-theme .badge-modern {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sena-enhanced-theme .badge-tipo {
+    background: #E3F2FD;
+    color: #1565C0;
+    border: 1px solid #BBDEFB;
+}
+
+.sena-enhanced-theme .badge-jornada {
+    background: #F3E5F5;
+    color: #7B1FA2;
+    border: 1px solid #E1BEEF;
+}
+
+.sena-enhanced-theme .badge-asignas {
+    background: #FFF3E0;
+    color: #E65100;
+    border: 1px solid #FFE0B2;
 }
 
 /* Mejora de Sidebar (opcional - solo si se aplica la clase) */

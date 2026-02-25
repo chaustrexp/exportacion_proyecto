@@ -30,6 +30,7 @@ class AsignacionController extends BaseController {
      * Listar todas las asignaciones
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         $fichas = $this->fichaModel->getAll();
         $instructores = $this->instructorModel->getAll();
@@ -63,6 +64,7 @@ class AsignacionController extends BaseController {
      * Mostrar formulario de creación
      */
     public function crear() {
+        verificarRol(['Administrador', 'Coordinador']);
         if ($this->isMethod('POST')) {
             return $this->store();
         }
@@ -82,6 +84,7 @@ class AsignacionController extends BaseController {
      * Guardar nueva asignación
      */
     public function store() {
+        verificarRol(['Administrador', 'Coordinador']);
         // Validar datos requeridos
         $errors = $this->validate($_POST, [
             'instructor_id',
@@ -140,6 +143,7 @@ class AsignacionController extends BaseController {
      * Mostrar formulario de edición
      */
     public function editar() {
+        verificarRol(['Administrador', 'Coordinador']);
         $id = $this->get('id', 0);
         
         if (!$id) {
@@ -172,6 +176,7 @@ class AsignacionController extends BaseController {
      * Actualizar asignación
      */
     public function update($id) {
+        verificarRol(['Administrador', 'Coordinador']);
         // Validar datos requeridos
         $errors = $this->validate($_POST, [
             'instructor_id',
@@ -200,6 +205,7 @@ class AsignacionController extends BaseController {
      * Eliminar asignación
      */
     public function eliminar() {
+        verificarRol(['Administrador', 'Coordinador']);
         $id = $this->get('id', 0);
         
         if (!$id) {
@@ -321,8 +327,16 @@ class AsignacionController extends BaseController {
         $month = $this->get('month', date('m'));
         $year = $this->get('year', date('Y'));
         
+        // Determinar si filtrar por instructor
+        $instructor_id = null;
+        $rol = $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '';
+        
+        if ($rol === 'Instructor') {
+            $instructor_id = $_SESSION['id'] ?? $_SESSION['usuario_id'] ?? null;
+        }
+        
         try {
-            $asignaciones = $this->model->getForCalendar($month, $year);
+            $asignaciones = $this->model->getForCalendar($month, $year, $instructor_id);
             $this->json($asignaciones);
         } catch (Exception $e) {
             $this->json(['error' => 'Error al cargar el calendario: ' . $e->getMessage()], 500);

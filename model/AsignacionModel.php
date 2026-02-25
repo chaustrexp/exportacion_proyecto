@@ -64,8 +64,8 @@ class AsignacionModel {
     
     public function create($data) {
         $stmt = $this->db->prepare("
-            INSERT INTO asignacion (instructor_inst_id, asig_fecha_ini, asig_fecha_fin, ficha_fich_id, ambiente_amb_id, competencia_comp_id) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO asignacion (instructor_inst_id, instructor_id, asig_fecha_ini, asig_fecha_fin, ficha_fich_id, ambiente_amb_id, competencia_comp_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         
         // Obtener fechas y horas
@@ -79,7 +79,8 @@ class AsignacionModel {
         $fecha_fin_dt = $fecha_fin . ' ' . $hora_fin . ':00';
         
         return $stmt->execute([
-            $data['instructor_id'] ?? $data['instructor_inst_id'],
+            $data['instructor_inst_id'] ?? $data['instructor_id'] ?? null,
+            $data['usuario_id'] ?? $data['instructor_id'] ?? null, // Nuevo instructor_id (usuarios.id)
             $fecha_ini,
             $fecha_fin_dt,
             $data['ficha_id'] ?? $data['ficha_fich_id'],
@@ -91,7 +92,7 @@ class AsignacionModel {
     public function update($id, $data) {
         $stmt = $this->db->prepare("
             UPDATE asignacion 
-            SET instructor_inst_id = ?, asig_fecha_ini = ?, asig_fecha_fin = ?, ficha_fich_id = ?, ambiente_amb_id = ?, competencia_comp_id = ?
+            SET instructor_inst_id = ?, instructor_id = ?, asig_fecha_ini = ?, asig_fecha_fin = ?, ficha_fich_id = ?, ambiente_amb_id = ?, competencia_comp_id = ?
             WHERE asig_id = ?
         ");
         
@@ -106,7 +107,8 @@ class AsignacionModel {
         $fecha_fin_dt = $fecha_fin . ' ' . $hora_fin . ':00';
         
         return $stmt->execute([
-            $data['instructor_id'] ?? $data['instructor_inst_id'],
+            $data['instructor_inst_id'] ?? $data['instructor_id'] ?? null,
+            $data['usuario_id'] ?? $data['instructor_id'] ?? null, // Nuevo instructor_id (usuarios.id)
             $fecha_ini,
             $fecha_fin_dt,
             $data['ficha_id'] ?? $data['ficha_fich_id'],
@@ -187,11 +189,11 @@ class AsignacionModel {
         return $stmt->fetchAll();
     }
 
-    public function getForCalendar($month = null, $year = null) {
+    public function getForCalendar($month = null, $year = null, $instructor_id = null) {
         if (!$month) $month = date('m');
         if (!$year) $year = date('Y');
 
-        $stmt = $this->db->prepare("
+        $sql = "
             SELECT a.asig_id as id,
                    f.fich_id as ficha_numero,
                    CONCAT(i.inst_nombres, ' ', i.inst_apellidos) as instructor_nombre,
@@ -199,17 +201,82 @@ class AsignacionModel {
                    c.comp_nombre_corto as competencia_nombre,
                    p.prog_denominacion as programa_nombre,
                    a.asig_fecha_ini as fecha_inicio,
-                   a.asig_fecha_fin as fecha_fin
+                   a.asig_fecha_fin as fecha_fin,
+                   TIME(a.asig_fecha_ini) as hora_inicio,
+                   TIME(a.asig_fecha_fin) as hora_fin
             FROM asignacion a
             LEFT JOIN ficha f ON a.ficha_fich_id = f.fich_id
             LEFT JOIN programa p ON f.programa_prog_id = p.prog_codigo
             LEFT JOIN instructor i ON a.instructor_inst_id = i.inst_id
             LEFT JOIN ambiente amb ON a.ambiente_amb_id = amb.amb_id
             LEFT JOIN competencia c ON a.competencia_comp_id = c.comp_id
-            WHERE YEAR(a.asig_fecha_ini) = ? OR YEAR(a.asig_fecha_fin) = ?
-            ORDER BY a.asig_fecha_ini ASC
+            WHERE (YEAR(a.asig_fecha_ini) = :year OR YEAR(a.asig_fecha_fin) = :year)
+        ";
+
+        if ($instructor_id) {
+            $sql .= " AND a.instructor_inst_id = :instructor_id";
+        }
+
+        $sql .= " ORDER BY a.asig_fecha_ini ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':year', $year);
+        if ($instructor_id) {
+            $stmt->bindParam(':instructor_id', $instructor_id);
+        }
+        
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function countFichasByInstructor($instructor_id) {
+        $stmt = $this->db->prepare("SELECT COUNT(DISTINCT ficha_fich_id) as total FROM asignacion WHERE instructor_id = ? OR instructor_inst_id = ?");
+        $stmt->execute([$instructor_id, $instructor_id]);
+        return $stmt->fetch()['total'];
+    }
+
+    public function countByInstructor($instructor_id) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM asignacion WHERE instructor_id = ? OR instructor_inst_id = ?");
+        $stmt->execute([$instructor_id, $instructor_id]);
+        return $stmt->fetch()['total'];
+    }
+
+    public function countActivasByInstructor($instructor_id) {
+        $hoy = date('Y-m-d H:i:s');
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM asignacion WHERE (instructor_id = ? OR instructor_inst_id = ?) AND asig_fecha_ini <= ? AND asig_fecha_fin >= ?");
+        $stmt->execute([$instructor_id, $instructor_id, $hoy, $hoy]);
+        return $stmt->fetch()['total'];
+    }
+
+    public function countFinalizadasByInstructor($instructor_id) {
+        $hoy = date('Y-m-d H:i:s');
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM asignacion WHERE (instructor_id = ? OR instructor_inst_id = ?) AND asig_fecha_fin < ?");
+        $stmt->execute([$instructor_id, $instructor_id, $hoy]);
+        return $stmt->fetch()['total'];
+    }
+
+    public function countNoActivasByInstructor($instructor_id) {
+        $hoy = date('Y-m-d H:i:s');
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM asignacion WHERE (instructor_id = ? OR instructor_inst_id = ?) AND asig_fecha_ini > ?");
+        $stmt->execute([$instructor_id, $instructor_id, $hoy]);
+        return $stmt->fetch()['total'];
+    }
+
+    public function getRecentByInstructor($instructor_id, $limit = 5) {
+        $stmt = $this->db->prepare("
+            SELECT a.*, f.fich_id as ficha_numero, p.prog_denominacion as programa_nombre,
+                   amb.amb_nombre as ambiente_nombre, c.comp_nombre_corto as competencia_nombre,
+                   DATE(a.asig_fecha_ini) as fecha_inicio, DATE(a.asig_fecha_fin) as fecha_fin
+            FROM asignacion a
+            LEFT JOIN ficha f ON a.ficha_fich_id = f.fich_id
+            LEFT JOIN programa p ON f.programa_prog_id = p.prog_codigo
+            LEFT JOIN ambiente amb ON a.ambiente_amb_id = amb.amb_id
+            LEFT JOIN competencia c ON a.competencia_comp_id = c.comp_id
+            WHERE a.instructor_id = ? OR a.instructor_inst_id = ?
+            ORDER BY a.asig_fecha_ini DESC
+            LIMIT ?
         ");
-        $stmt->execute([$year, $year]);
+        $stmt->execute([$instructor_id, $instructor_id, $limit]);
         return $stmt->fetchAll();
     }
 }

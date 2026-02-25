@@ -1,34 +1,39 @@
 <?php
+require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../model/AsignacionModel.php';
 require_once __DIR__ . '/../model/FichaModel.php';
 require_once __DIR__ . '/../model/InstructorModel.php';
 
-class InstructorDashboardController {
+class InstructorDashboardController extends BaseController {
     private $asignacionModel;
     private $fichaModel;
     private $instructorModel;
     
     public function __construct() {
+        parent::__construct();
         $this->asignacionModel = new AsignacionModel();
         $this->fichaModel = new FichaModel();
         $this->instructorModel = new InstructorModel();
+        $this->viewPath = 'instructor_dashboard';
     }
     
     public function index() {
-        // Verificar que sea instructor
-        if ($_SESSION['usuario_rol'] !== 'Instructor') {
-            header('Location: ' . BASE_PATH . 'index.php');
-            exit;
-        }
-        
+        // Verificar que esté logueado y sea instructor
         $instructor_id = $_SESSION['instructor_id'] ?? null;
-        
-        if (!$instructor_id) {
-            die('Error: No se encontró el ID del instructor');
+        $rol = $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '';
+
+        if (!$instructor_id || $rol !== 'Instructor') {
+            $this->redirect(BASE_PATH . 'auth/login.php');
+            return;
         }
         
-        // Obtener información del instructor
-        $instructor = $this->instructorModel->getById($instructor_id);
+        // Obtener información del usuario/instructor
+        $instructor_info = [
+            'inst_nombres' => $_SESSION['nombre'] ?? $_SESSION['usuario_nombre']
+        ];
+        
+        // Obtener información del instructor si es necesario
+        $instructor = $instructor_info;
         
         // Obtener fichas asignadas al instructor
         $fichas = $this->getFichasInstructor($instructor_id);
@@ -38,6 +43,9 @@ class InstructorDashboardController {
         
         // Obtener estadísticas
         $estadisticas = $this->getEstadisticas($instructor_id);
+        
+        // Obtener asignaciones para el calendario (filtradas por instructor)
+        $asignacionesCalendario = $this->asignacionModel->getForCalendar(date('m'), date('Y'), $instructor_id);
         
         // Cargar vista
         require_once __DIR__ . '/../views/instructor_dashboard/index.php';
@@ -58,18 +66,13 @@ class InstructorDashboardController {
             FROM ficha f
             LEFT JOIN programa p ON f.programa_prog_id = p.prog_codigo
             LEFT JOIN coordinacion c ON f.coordinacion_coord_id = c.coord_id
-            LEFT JOIN asignacion a ON f.fich_id = a.ficha_fich_id AND a.instructor_inst_id = ?
-            WHERE f.instructor_inst_id_lider = ? 
-               OR EXISTS (
-                   SELECT 1 FROM asignacion a2 
-                   WHERE a2.ficha_fich_id = f.fich_id 
-                   AND a2.instructor_inst_id = ?
-               )
+            INNER JOIN asignacion a ON f.fich_id = a.ficha_fich_id
+            WHERE a.instructor_inst_id = ?
             GROUP BY f.fich_id
             ORDER BY f.fich_numero DESC
         ");
         
-        $stmt->execute([$instructor_id, $instructor_id, $instructor_id]);
+        $stmt->execute([$instructor_id]);
         return $stmt->fetchAll();
     }
     
@@ -106,14 +109,10 @@ class InstructorDashboardController {
         $stmt = $db->prepare("
             SELECT COUNT(DISTINCT f.fich_id) as total
             FROM ficha f
-            WHERE f.instructor_inst_id_lider = ? 
-               OR EXISTS (
-                   SELECT 1 FROM asignacion a 
-                   WHERE a.ficha_fich_id = f.fich_id 
-                   AND a.instructor_inst_id = ?
-               )
+            INNER JOIN asignacion a ON f.fich_id = a.ficha_fich_id
+            WHERE a.instructor_inst_id = ?
         ");
-        $stmt->execute([$instructor_id, $instructor_id]);
+        $stmt->execute([$instructor_id]);
         $totalFichas = $stmt->fetch()['total'];
         
         // Total de asignaciones
@@ -154,24 +153,27 @@ class InstructorDashboardController {
     }
     
     public function misFichas() {
-        if ($_SESSION['usuario_rol'] !== 'Instructor') {
-            header('Location: ' . BASE_PATH . 'index.php');
-            exit;
+        $instructor_id = $_SESSION['instructor_id'] ?? null;
+        $rol = $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '';
+
+        if (!$instructor_id || $rol !== 'Instructor') {
+            $this->redirect(BASE_PATH . 'auth/login.php');
+            return;
         }
         
-        $instructor_id = $_SESSION['instructor_id'] ?? null;
         $fichas = $this->getFichasInstructor($instructor_id);
         
         require_once __DIR__ . '/../views/instructor_dashboard/mis_fichas.php';
     }
     
     public function misAsignaciones() {
-        if ($_SESSION['usuario_rol'] !== 'Instructor') {
-            header('Location: ' . BASE_PATH . 'index.php');
-            exit;
-        }
-        
         $instructor_id = $_SESSION['instructor_id'] ?? null;
+        $rol = $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '';
+
+        if (!$instructor_id || $rol !== 'Instructor') {
+            $this->redirect(BASE_PATH . 'auth/login.php');
+            return;
+        }
         
         $db = Database::getInstance()->getConnection();
         

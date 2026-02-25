@@ -1,75 +1,56 @@
--- FIX URGENTE - Ejecutar en phpMyAdmin
--- Selecciona la base de datos progsena primero
+-- FIX URGENTE: Verificar y corregir usuario instructor
+USE `progsena`;
 
-USE progsena;
+-- 1. Ver todos los usuarios y su estado
+SELECT id, nombre, email, rol, estado, instructor_id 
+FROM usuarios;
 
--- Eliminar y recrear la tabla programa con AUTO_INCREMENT
-DROP TABLE IF EXISTS competxprograma;
-DROP TABLE IF EXISTS ficha;
-DROP TABLE IF EXISTS programa;
+-- 2. Verificar específicamente el usuario joselop@sena.edu.co
+SELECT id, nombre, email, rol, estado, instructor_id, password
+FROM usuarios 
+WHERE email = 'joselop@sena.edu.co';
 
-CREATE TABLE `programa` (
-  `prog_codigo` INT NOT NULL AUTO_INCREMENT,
-  `prog_denominacion` VARCHAR(100) NOT NULL,
-  `titulo_programa_titpro_id` INT NOT NULL,
-  `prog_tipo` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`prog_codigo`),
-  INDEX `fk_programa_titulo_programa_idx` (`titulo_programa_titpro_id` ASC),
-  CONSTRAINT `fk_programa_titulo_programa`
-    FOREIGN KEY (`titulo_programa_titpro_id`)
-    REFERENCES `titulo_programa` (`titpro_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+-- 3. Si el usuario existe pero está inactivo, activarlo:
+UPDATE usuarios 
+SET estado = 'Activo' 
+WHERE email = 'joselop@sena.edu.co';
 
--- Recrear competxprograma
-CREATE TABLE `competxprograma` (
-  `programa_prog_id` INT NOT NULL,
-  `competencia_comp_id` INT NOT NULL,
-  PRIMARY KEY (`programa_prog_id`, `competencia_comp_id`),
-  INDEX `fk_competxprograma_competencia_idx` (`competencia_comp_id` ASC),
-  CONSTRAINT `fk_competxprograma_programa`
-    FOREIGN KEY (`programa_prog_id`)
-    REFERENCES `programa` (`prog_codigo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_competxprograma_competencia`
-    FOREIGN KEY (`competencia_comp_id`)
-    REFERENCES `competencia` (`comp_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+-- 4. Si el usuario no existe, crearlo:
+INSERT INTO usuarios (nombre, email, password, rol, instructor_id, estado)
+SELECT 'Jose Lopez', 'joselop@sena.edu.co', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Instructor', 2, 'Activo'
+WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE email = 'joselop@sena.edu.co');
 
--- Recrear ficha
-CREATE TABLE `ficha` (
-  `fich_id` INT NOT NULL AUTO_INCREMENT,
-  `fich_numero` VARCHAR(20) NULL,
-  `programa_prog_id` INT NOT NULL,
-  `instructor_inst_id_lider` INT NOT NULL,
-  `fich_jornada` VARCHAR(20) NOT NULL,
-  `fich_fecha_ini_lectiva` DATE NULL,
-  `fich_fecha_fin_lectiva` DATE NULL,
-  `coordinacion_coord_id` INT NOT NULL,
-  PRIMARY KEY (`fich_id`),
-  INDEX `fk_ficha_programa_idx` (`programa_prog_id` ASC),
-  INDEX `fk_ficha_instructor_idx` (`instructor_inst_id_lider` ASC),
-  INDEX `fk_ficha_coordinacion_idx` (`coordinacion_coord_id` ASC),
-  CONSTRAINT `fk_ficha_programa`
-    FOREIGN KEY (`programa_prog_id`)
-    REFERENCES `programa` (`prog_codigo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ficha_instructor`
-    FOREIGN KEY (`instructor_inst_id_lider`)
-    REFERENCES `instructor` (`inst_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ficha_coordinacion`
-    FOREIGN KEY (`coordinacion_coord_id`)
-    REFERENCES `coordinacion` (`coord_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+-- 5. Verificar que el instructor existe en la tabla instructor
+SELECT inst_id, inst_nombres, inst_apellidos, inst_correo 
+FROM instructor 
+WHERE inst_id = 2;
 
--- Verificar
-SHOW CREATE TABLE programa;
+-- 6. Si no existe el instructor, crearlo:
+INSERT INTO instructor (inst_id, inst_nombres, inst_apellidos, inst_correo, inst_telefono, centro_formacion_cent_id)
+SELECT 2, 'Jose', 'Lopez', 'joselop@sena.edu.co', 3001234567, 1
+WHERE NOT EXISTS (SELECT 1 FROM instructor WHERE inst_id = 2);
+
+-- 7. Verificar resultado final
+SELECT 
+    u.id as usuario_id,
+    u.nombre,
+    u.email,
+    u.rol,
+    u.estado,
+    u.instructor_id,
+    i.inst_nombres,
+    i.inst_apellidos
+FROM usuarios u
+LEFT JOIN instructor i ON u.instructor_id = i.inst_id
+WHERE u.email = 'joselop@sena.edu.co';
+
+-- 8. Verificar que exista al menos un centro de formación
+SELECT * FROM centro_formacion LIMIT 1;
+
+-- Si no existe, crear uno:
+INSERT INTO centro_formacion (cent_id, cent_nombre)
+SELECT 1, 'Centro de Formación SENA Cúcuta'
+WHERE NOT EXISTS (SELECT 1 FROM centro_formacion WHERE cent_id = 1);
+
+SELECT '✅ Script ejecutado. Verifica los resultados arriba.' as mensaje;
+SELECT 'Credenciales: joselop@sena.edu.co / instructor123' as credenciales;

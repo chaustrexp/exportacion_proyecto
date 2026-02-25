@@ -15,7 +15,7 @@ $pageTitle = 'Mis Asignaciones - Instructor';
     <?php include __DIR__ . '/../layout/header.php'; ?>
     <?php include __DIR__ . '/../layout/sidebar.php'; ?>
     
-    <div class="main-content">
+    <div class="main-content sena-enhanced-theme">
         <div class="page-header">
             <h1>📅 Mis Asignaciones</h1>
             <p>Historial completo de todas tus asignaciones</p>

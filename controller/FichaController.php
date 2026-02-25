@@ -26,6 +26,7 @@ class FichaController extends BaseController {
      * Listado de fichas
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         try {
             $registros = $this->model->getAll();
             

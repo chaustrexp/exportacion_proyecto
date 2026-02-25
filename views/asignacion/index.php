@@ -66,8 +66,8 @@
                         <select id="filtro-instructor" name="instructor">
                             <option value="">Todos</option>
                             <?php
-                            $instructores = array_unique(array_column($registros, 'instructor_nombre'));
-                            foreach ($instructores as $inst):
+                            $instructoresUnicos = array_unique(array_column($registros, 'instructor_nombre'));
+                            foreach ($instructoresUnicos as $inst):
                                 if ($inst):
                             ?>
                                 <option value="<?php echo htmlspecialchars($inst); ?>">
@@ -104,8 +104,8 @@
                         <select id="filtro-ambiente" name="ambiente">
                             <option value="">Todos</option>
                             <?php
-                            $ambientes = array_unique(array_column($registros, 'ambiente_nombre'));
-                            foreach ($ambientes as $amb):
+                            $ambientesUnicos = array_unique(array_column($registros, 'ambiente_nombre'));
+                            foreach ($ambientesUnicos as $amb):
                                 if ($amb && $amb !== 'N/A'):
                             ?>
                                 <option value="<?php echo htmlspecialchars($amb); ?>">

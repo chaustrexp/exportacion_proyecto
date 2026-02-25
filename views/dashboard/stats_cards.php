@@ -1,7 +1,17 @@
 <!-- Estadísticas del Dashboard -->
 <div style="padding: 24px 32px;">
     
-    <!-- Primera fila: 4 tarjetas principales -->
+    <?php 
+    $rol = $_SESSION['usuario_rol'] ?? $_SESSION['rol'] ?? 'Instructor';
+    
+    if ($rol === 'Instructor') {
+        include __DIR__ . '/roles/instructor_stats.php';
+    } elseif ($rol === 'Coordinador') {
+        include __DIR__ . '/roles/coordinator_stats.php';
+    } else {
+        // Vista Administrador (Vista global clásica)
+    ?>
+    <!-- Primera fila: 4 tarjetas principales (Solo para Admin) -->
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px;">
         
         <!-- Programas -->
@@ -12,7 +22,7 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Programas</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalProgramas; ?></div>
+                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalProgramas ?? 0; ?></div>
                 </div>
             </div>
         </div>
@@ -25,7 +35,7 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Fichas</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalFichas; ?></div>
+                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalFichas ?? 0; ?></div>
                 </div>
             </div>
         </div>
@@ -38,7 +48,7 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Instructores</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalInstructores; ?></div>
+                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalInstructores ?? 0; ?></div>
                 </div>
             </div>
         </div>
@@ -51,65 +61,58 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Ambientes</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalAmbientes; ?></div>
+                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalAmbientes ?? 0; ?></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Segunda fila: 4 tarjetas de asignaciones -->
+    <!-- Segunda fila Admin -->
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
-        
-        <!-- Total Asignaciones -->
-        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.3s;">
+        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i data-lucide="calendar" style="width: 24px; height: 24px; color: #ec4899;"></i>
+                <div style="width: 40px; height: 40px; background: #FFF1F2; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="calendar" style="width: 20px; height: 20px; color: #E11D48;"></i>
                 </div>
-                <div style="flex: 1;">
-                    <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Asignaciones</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalAsignaciones; ?></div>
+                <div>
+                    <div style="font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Total Asignaciones</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #1f2937;"><?php echo $totalAsignaciones ?? 0; ?></div>
                 </div>
             </div>
         </div>
-
-        <!-- Asignaciones Activas -->
-        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.3s;">
+        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i data-lucide="activity" style="width: 24px; height: 24px; color: #3b82f6;"></i>
+                <div style="width: 40px; height: 40px; background: #F0FDF4; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="activity" style="width: 20px; height: 20px; color: #16A34A;"></i>
                 </div>
-                <div style="flex: 1;">
-                    <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">No Activas</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $asignacionesNoActivas; ?></div>
+                <div>
+                    <div style="font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Activas</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #1f2937;"><?php echo $asignacionesActivas ?? 0; ?></div>
                 </div>
             </div>
         </div>
-
-        <!-- Asignaciones Finalizadas -->
-        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.3s;">
+        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #E8F5E8 0%, #d4edda 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i data-lucide="check-circle" style="width: 24px; height: 24px; color: #39A900;"></i>
+                <div style="width: 40px; height: 40px; background: #F9FAFB; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="check-circle" style="width: 20px; height: 20px; color: #4B5563;"></i>
                 </div>
-                <div style="flex: 1;">
-                    <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Finalizadas</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $asignacionesFinalizadas; ?></div>
+                <div>
+                    <div style="font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Finalizadas</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #1f2937;"><?php echo $asignacionesFinalizadas ?? 0; ?></div>
                 </div>
             </div>
         </div>
-
-        <!-- Competencias -->
-        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.3s;">
+        <div class="stat-card" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i data-lucide="award" style="width: 24px; height: 24px; color: #10b981;"></i>
+                <div style="width: 40px; height: 40px; background: #FEFCE8; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="clock" style="width: 20px; height: 20px; color: #CA8A04;"></i>
                 </div>
-                <div style="flex: 1;">
-                    <div style="font-size: 11px; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Competencias</div>
-                    <div style="font-size: 24px; font-weight: 700; color: #1f2937; line-height: 1;"><?php echo $totalCompetenciasInstructor; ?></div>
+                <div>
+                    <div style="font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">No Activas</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #1f2937;"><?php echo $asignacionesNoActivas ?? 0; ?></div>
                 </div>
             </div>
         </div>
     </div>
+    <?php } ?>
 </div>

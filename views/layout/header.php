@@ -88,58 +88,60 @@ $documentTitle = $pageTitle . ' - Dashboard SENA';
         
         <!-- Acciones del Header -->
         <div class="navbar-actions">
-            <!-- Botón Agregar -->
-            <div style="position: relative;">
-                <button class="navbar-btn" id="addBtn" title="Agregar nuevo">
-                    <i data-lucide="plus"></i>
-                </button>
-                
-                <!-- Dropdown Agregar -->
-                <div class="add-dropdown" id="addDropdown">
-                    <a href="<?php echo BASE_PATH; ?>asignacion/create" class="add-dropdown-item">
-                        <i data-lucide="calendar"></i>
-                        Nueva Asignación
-                    </a>
-                    <a href="<?php echo BASE_PATH; ?>instructor/create" class="add-dropdown-item">
-                        <i data-lucide="user-plus"></i>
-                        Nuevo Instructor
-                    </a>
-                    <a href="<?php echo BASE_PATH; ?>ficha/create" class="add-dropdown-item">
-                        <i data-lucide="file-plus"></i>
-                        Nueva Ficha
-                    </a>
-                    <a href="<?php echo BASE_PATH; ?>programa/create" class="add-dropdown-item">
-                        <i data-lucide="book-open"></i>
-                        Nuevo Programa
-                    </a>
-                    <a href="<?php echo BASE_PATH; ?>ambiente/create" class="add-dropdown-item">
-                        <i data-lucide="map-pin"></i>
-                        Nuevo Ambiente
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Notificaciones -->
-            <div style="position: relative;">
-                <button class="navbar-btn navbar-notifications" id="notificationsBtn" title="Notificaciones">
-                    <i data-lucide="bell"></i>
-                    <span class="notification-badge" id="notificationBadge">3</span>
-                </button>
-                
-                <!-- Dropdown Notificaciones -->
-                <div class="notifications-dropdown" id="notificationsDropdown">
-                    <div class="notifications-header">
-                        <h3>Notificaciones</h3>
-                        <a href="#" class="mark-all-read" id="markAllRead">Marcar todas como leídas</a>
-                    </div>
-                    <div class="notifications-list" id="notificationsList">
-                        <!-- Las notificaciones se cargarán aquí dinámicamente -->
-                    </div>
-                    <div class="notifications-footer">
-                        <a href="#" class="view-all-notifications">Ver todas las notificaciones</a>
+            <?php if (($_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '') !== 'Instructor'): ?>
+                <!-- Botón Agregar -->
+                <div style="position: relative;">
+                    <button class="navbar-btn" id="addBtn" title="Agregar nuevo">
+                        <i data-lucide="plus"></i>
+                    </button>
+                    
+                    <!-- Dropdown Agregar -->
+                    <div class="add-dropdown" id="addDropdown">
+                        <a href="<?php echo BASE_PATH; ?>asignacion/create" class="add-dropdown-item">
+                            <i data-lucide="calendar"></i>
+                            Nueva Asignación
+                        </a>
+                        <a href="<?php echo BASE_PATH; ?>instructor/create" class="add-dropdown-item">
+                            <i data-lucide="user-plus"></i>
+                            Nuevo Instructor
+                        </a>
+                        <a href="<?php echo BASE_PATH; ?>ficha/create" class="add-dropdown-item">
+                            <i data-lucide="file-plus"></i>
+                            Nueva Ficha
+                        </a>
+                        <a href="<?php echo BASE_PATH; ?>programa/create" class="add-dropdown-item">
+                            <i data-lucide="book-open"></i>
+                            Nuevo Programa
+                        </a>
+                        <a href="<?php echo BASE_PATH; ?>ambiente/create" class="add-dropdown-item">
+                            <i data-lucide="map-pin"></i>
+                            Nuevo Ambiente
+                        </a>
                     </div>
                 </div>
-            </div>
+                
+                <!-- Notificaciones -->
+                <div style="position: relative;">
+                    <button class="navbar-btn navbar-notifications" id="notificationsBtn" title="Notificaciones">
+                        <i data-lucide="bell"></i>
+                        <span class="notification-badge" id="notificationBadge">3</span>
+                    </button>
+                    
+                    <!-- Dropdown Notificaciones -->
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <h3>Notificaciones</h3>
+                            <a href="#" class="mark-all-read" id="markAllRead">Marcar todas como leídas</a>
+                        </div>
+                        <div class="notifications-list" id="notificationsList">
+                            <!-- Las notificaciones se cargarán aquí dinámicamente -->
+                        </div>
+                        <div class="notifications-footer">
+                            <a href="#" class="view-all-notifications">Ver todas las notificaciones</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
             
             <!-- Ayuda -->
             <button class="navbar-btn" id="helpBtn" title="Ayuda">

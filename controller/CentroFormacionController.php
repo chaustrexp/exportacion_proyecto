@@ -19,6 +19,7 @@ class CentroFormacionController extends BaseController {
      * Listar todos los centros de formación
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         
         $this->render('index', [

@@ -10,7 +10,6 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     
     # Excluir rutas específicas del routing
-    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/auth/
     RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/api/
     RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/assets/
     RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/views/

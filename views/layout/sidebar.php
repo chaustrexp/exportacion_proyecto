@@ -18,123 +18,146 @@
     <!-- Navegación Principal -->
     <nav class="sidebar-nav">
         <ul class="nav-list">
-            <!-- Dashboard -->
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>dashboard/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="layout-dashboard"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-            </li>
+            <?php if ($_SESSION['usuario_rol'] !== 'Instructor'): ?>
+                <!-- Dashboard Administrativo/Coordinador -->
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>dashboard/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="layout-dashboard"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
 
-            <!-- Sección: Académico -->
-            <li class="nav-section">
-                <span class="section-title">Académico</span>
-            </li>
+                <!-- Sección: Académico -->
+                <li class="nav-section">
+                    <span class="section-title">Académico</span>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>programa/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="book-open"></i>
-                    <span class="nav-text">Programas</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>programa/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="book-open"></i>
+                        <span class="nav-text">Programas</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>ficha/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="file-text"></i>
-                    <span class="nav-text">Fichas</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>ficha/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="file-text"></i>
+                        <span class="nav-text">Fichas</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>competencia/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="target"></i>
-                    <span class="nav-text">Competencias</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>competencia/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="target"></i>
+                        <span class="nav-text">Competencias</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>competencia_programa/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="link"></i>
-                    <span class="nav-text">Competencia-Programa</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>competencia_programa/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="link"></i>
+                        <span class="nav-text">Competencia-Programa</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>titulo_programa/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="graduation-cap"></i>
-                    <span class="nav-text">Título Programa</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>titulo_programa/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="graduation-cap"></i>
+                        <span class="nav-text">Título Programa</span>
+                    </a>
+                </li>
 
-            <!-- Sección: Recursos -->
-            <li class="nav-section">
-                <span class="section-title">Recursos</span>
-            </li>
+                <!-- Sección: Recursos -->
+                <li class="nav-section">
+                    <span class="section-title">Recursos</span>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>instructor/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="user"></i>
-                    <span class="nav-text">Instructores</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>instructor/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="user"></i>
+                        <span class="nav-text">Instructores</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>instru_competencia/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="award"></i>
-                    <span class="nav-text">Competencias Instructor</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>instru_competencia/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="award"></i>
+                        <span class="nav-text">Competencias Instructor</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>ambiente/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="home"></i>
-                    <span class="nav-text">Ambientes</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>ambiente/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="home"></i>
+                        <span class="nav-text">Ambientes</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>asignacion/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="calendar"></i>
-                    <span class="nav-text">Asignaciones</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>asignacion/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="calendar"></i>
+                        <span class="nav-text">Asignaciones</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>detalle_asignacion/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="clipboard-list"></i>
-                    <span class="nav-text">Detalle Asignación</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>detalle_asignacion/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="clipboard-list"></i>
+                        <span class="nav-text">Detalle Asignación</span>
+                    </a>
+                </li>
 
-            <!-- Sección: Infraestructura -->
-            <li class="nav-section">
-                <span class="section-title">Infraestructura</span>
-            </li>
+                <!-- Sección: Infraestructura -->
+                <li class="nav-section">
+                    <span class="section-title">Infraestructura</span>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>centro_formacion/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="building-2"></i>
-                    <span class="nav-text">Centro Formación</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>centro_formacion/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="building-2"></i>
+                        <span class="nav-text">Centro Formación</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>sede/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="map-pin"></i>
-                    <span class="nav-text">Sedes</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>sede/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="map-pin"></i>
+                        <span class="nav-text">Sedes</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="<?php echo BASE_PATH; ?>coordinacion/index" class="nav-link">
-                    <i class="nav-icon" data-lucide="users"></i>
-                    <span class="nav-text">Coordinación</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>coordinacion/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="users"></i>
+                        <span class="nav-text">Coordinación</span>
+                    </a>
+                </li>
+            <?php else: ?>
+                <!-- Menú para Instructores -->
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>dashboard/index" class="nav-link">
+                        <i class="nav-icon" data-lucide="layout-dashboard"></i>
+                        <span class="nav-text">Inicio</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>instructor_dashboard/misFichas" class="nav-link">
+                        <i class="nav-icon" data-lucide="file-text"></i>
+                        <span class="nav-text">Mis Fichas</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="<?php echo BASE_PATH; ?>instructor_dashboard/misAsignaciones" class="nav-link">
+                        <i class="nav-icon" data-lucide="calendar"></i>
+                        <span class="nav-text">Mis Asignaciones</span>
+                    </a>
+                </li>
+            <?php endif; ?>
         </ul>
     </nav>
 
-    <!-- Footer del Sidebar con Perfil de Usuario -->
     <div class="sidebar-footer">
         <div class="user-profile-sidebar">
             <div class="user-avatar-sidebar">
@@ -144,6 +167,9 @@
                 <span class="user-name-sidebar"><?php echo $_SESSION['usuario_nombre']; ?></span>
                 <span class="user-role-sidebar"><?php echo $_SESSION['usuario_rol']; ?></span>
             </div>
+            <a href="<?php echo BASE_PATH; ?>auth/logout" class="logout-btn-sidebar" title="Cerrar Sesión">
+                <i data-lucide="log-out"></i>
+            </a>
         </div>
     </div>
 </aside>

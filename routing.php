@@ -7,9 +7,6 @@
 // Cargar configuración
 require_once __DIR__ . '/config/config.php';
 
-// Proteger con autenticación
-require_once __DIR__ . '/auth/check_auth.php';
-
 // Obtener la ruta solicitada
 $request = $_SERVER['REQUEST_URI'];
 $basePath = BASE_PATH;
@@ -19,12 +16,21 @@ $route = str_replace($basePath, '', $request);
 $route = strtok($route, '?'); // Remover query string
 $route = trim($route, '/');
 
+// Determinar si es una ruta de autenticación para omitir el check
+$isAuthRoute = str_starts_with($route, 'auth/') || $route === 'auth';
+
+// Proteger con autenticación (excepto rutas de login)
+if (!$isAuthRoute) {
+    require_once __DIR__ . '/auth/check_auth.php';
+}
+
 // Si la ruta está vacía o es 'index.php', redirigir según el rol
 if (empty($route) || $route === 'index.php') {
     // Redirigir según el rol del usuario
     if ($_SESSION['usuario_rol'] === 'Instructor') {
         $route = 'instructor_dashboard';
     } else {
+        // Administrador y Coordinador usan el dashboard principal
         $route = 'dashboard';
     }
 }
@@ -214,6 +220,16 @@ $routes = [
             'edit' => 'editar',
             'delete' => 'eliminar'
         ]
+    ],
+    'auth' => [
+        'controller' => 'AuthController',
+        'file' => 'controller/AuthController.php',
+        'actions' => ['index', 'login', 'logout'],
+        'action_map' => [
+            'login' => 'login',
+            'logout' => 'logout'
+        ],
+        'default_action' => 'index'
     ]
 ];
 

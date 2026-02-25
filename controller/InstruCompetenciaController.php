@@ -30,6 +30,7 @@ class InstruCompetenciaController extends BaseController {
      * Listar todas las asignaciones
      */
     public function index() {
+        verificarRol(['Administrador', 'Coordinador']);
         $registros = $this->model->getAll();
         
         // Obtener asociaciones válidas de COMPETxPROGRAMA

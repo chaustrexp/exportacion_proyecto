@@ -1,4 +1,23 @@
 <?php
+/**
+ * ============================================================
+ * DashboardController.php
+ * ============================================================
+ * Controlador del Dashboard Principal de ProgSENA.
+ * Genera estadísticas y datos contextuales según el rol activo
+ * del usuario en sesión (Administrador, Coordinador, Instructor).
+ *
+ * Rutas atendidas:
+ *   GET dashboard/index → Panel principal con estadísticas
+ *
+ * Lógica de roles:
+ *   - Instructor  → Solo ve sus propias asignaciones y fichas
+ *   - Coordinador → Ve estadísticas globales del sistema
+ *   - Administrador → Vista total del sistema
+ *
+ * @package Controllers
+ */
+
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../model/ProgramaModel.php';
 require_once __DIR__ . '/../model/FichaModel.php';
@@ -7,7 +26,10 @@ require_once __DIR__ . '/../model/AmbienteModel.php';
 require_once __DIR__ . '/../model/AsignacionModel.php';
 
 /**
- * Controlador del Dashboard Principal
+ * Class DashboardController
+ *
+ * El dashboard adapta su contenido según el rol del usuario autenticado.
+ * Carga múltiples modelos para componer los KPIs y tablas del panel.
  */
 class DashboardController extends BaseController {
     private $programaModel;

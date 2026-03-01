@@ -1,12 +1,40 @@
 <?php
+/**
+ * ============================================================
+ * CompetenciaModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Competencia.
+ * Una competencia representa una unidad de aprendizaje del SENA,
+ * con un código corto, total de horas y descripción de la unidad.
+ *
+ * Tabla principal: competencia
+ *   - comp_id                         INT (PK, AUTO_INCREMENT)
+ *   - comp_nombre_corto               VARCHAR(30)
+ *   - comp_horas                      INT
+ *   - comp_nombre_unidad_competencia  VARCHAR(150)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class CompetenciaModel
+ *
+ * Proporciona operaciones CRUD sobre la tabla `competencia`.
+ */
 class CompetenciaModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
+
     
     public function getAll() {
         $stmt = $this->db->query("SELECT * FROM competencia ORDER BY comp_nombre_corto");

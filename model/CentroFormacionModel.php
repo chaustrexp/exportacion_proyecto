@@ -1,9 +1,33 @@
 <?php
+/**
+ * ============================================================
+ * CentroFormacionModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Centro de Formación.
+ * Un centro agrupa instructores y coordinaciones.
+ *
+ * Tabla principal: centro_formacion
+ *   - cent_id     INT (PK, AUTO_INCREMENT)
+ *   - cent_nombre VARCHAR(100)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class CentroFormacionModel
+ *
+ * Operaciones CRUD sobre la tabla `centro_formacion`.
+ */
 class CentroFormacionModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton de la base de datos.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }

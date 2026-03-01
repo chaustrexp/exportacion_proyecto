@@ -10,10 +10,10 @@
             lucide.createIcons();
         }
 
-        // Confirmación de eliminación
+        // Confirmación de eliminación - usa el sistema de routing del proyecto
         function confirmarEliminacion(id, modulo) {
-            if (confirm('¿Está seguro de eliminar este registro?')) {
-                window.location.href = window.BASE_PATH + 'views/' + modulo + '/index.php?eliminar=' + id;
+            if (confirm('¿Está seguro de eliminar este registro? Esta acción no se puede deshacer.')) {
+                window.location.href = window.BASE_PATH + modulo + '/eliminar/' + id;
             }
         }
 

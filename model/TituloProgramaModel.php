@@ -1,12 +1,38 @@
 <?php
+/**
+ * ============================================================
+ * TituloProgramaModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Título de Programa.
+ * Un título es la categoría académica que agrupa programas
+ * (ej: Técnico, Tecnólogo, Especialización).
+ *
+ * Tabla principal: titulo_programa
+ *   - titpro_id     INT (PK, AUTO_INCREMENT)
+ *   - titpro_nombre VARCHAR(45)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class TituloProgramaModel
+ *
+ * Operaciones CRUD sobre la tabla `titulo_programa`.
+ */
 class TituloProgramaModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
+
     
     public function getAll() {
         $stmt = $this->db->query("SELECT * FROM titulo_programa ORDER BY titpro_nombre");

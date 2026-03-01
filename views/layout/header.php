@@ -50,6 +50,80 @@ $version = time(); // Cambia en cada recarga
 
 // Título del documento
 $documentTitle = $pageTitle . ' - Dashboard SENA';
+
+/**
+ * Realiza la búsqueda global en la base de datos.
+ * Se llama internamente desde el header para resultados sin JS.
+ */
+if (!function_exists('getSearchResults')) {
+    function getSearchResults(string $query): array {
+        if (mb_strlen(trim($query)) < 2) return [];
+
+        require_once __DIR__ . '/../../conexion.php';
+        $db      = Database::getInstance()->getConnection();
+        $term    = '%' . trim($query) . '%';
+        $results = [];
+
+        try {
+            // Instructores
+            $stmt = $db->prepare("
+                SELECT IdInstructor AS id,
+                       CONCAT(Nombre,' ',Apellido) AS title,
+                       Especialidad AS subtitle
+                FROM instructor
+                WHERE CONCAT(Nombre,' ',Apellido) LIKE :t OR Especialidad LIKE :t2 OR Documento LIKE :t3
+                LIMIT 4
+            ");
+            $stmt->execute([':t' => $term, ':t2' => $term, ':t3' => $term]);
+            foreach ($stmt->fetchAll() as $r) {
+                $results[] = ['title' => $r['title'], 'subtitle' => 'Instructor - '.($r['subtitle'] ?: '—'),
+                    'url' => BASE_PATH.'instructor/ver/'.$r['id'], 'icon' => 'user'];
+            }
+
+            // Fichas
+            $stmt = $db->prepare("
+                SELECT f.IdFicha AS id, f.NumeroFicha AS numero, p.NombrePrograma AS prog
+                FROM ficha f LEFT JOIN programa p ON f.IdPrograma=p.IdPrograma
+                WHERE f.NumeroFicha LIKE :t OR p.NombrePrograma LIKE :t2
+                LIMIT 4
+            ");
+            $stmt->execute([':t' => $term, ':t2' => $term]);
+            foreach ($stmt->fetchAll() as $r) {
+                $results[] = ['title' => 'Ficha '.$r['numero'], 'subtitle' => $r['prog'] ?: '—',
+                    'url' => BASE_PATH.'ficha/show/'.$r['id'], 'icon' => 'file-text'];
+            }
+
+            // Programas
+            $stmt = $db->prepare("
+                SELECT IdPrograma AS id, NombrePrograma AS title, CodigoPrograma AS codigo
+                FROM programa WHERE NombrePrograma LIKE :t OR CodigoPrograma LIKE :t2
+                LIMIT 4
+            ");
+            $stmt->execute([':t' => $term, ':t2' => $term]);
+            foreach ($stmt->fetchAll() as $r) {
+                $results[] = ['title' => $r['title'], 'subtitle' => 'Código: '.($r['codigo'] ?: '—'),
+                    'url' => BASE_PATH.'programa/show/'.$r['id'], 'icon' => 'book-open'];
+            }
+
+            // Ambientes
+            $stmt = $db->prepare("
+                SELECT IdAmbiente AS id, NombreAmbiente AS title, TipoAmbiente AS tipo
+                FROM ambiente WHERE NombreAmbiente LIKE :t OR TipoAmbiente LIKE :t2
+                LIMIT 4
+            ");
+            $stmt->execute([':t' => $term, ':t2' => $term]);
+            foreach ($stmt->fetchAll() as $r) {
+                $results[] = ['title' => $r['title'], 'subtitle' => 'Ambiente - '.($r['tipo'] ?: '—'),
+                    'url' => BASE_PATH.'ambiente/ver/'.$r['id'], 'icon' => 'map-pin'];
+            }
+
+        } catch (PDOException $e) {
+            error_log('Header search error: ' . $e->getMessage());
+        }
+
+        return array_slice($results, 0, 15);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -84,13 +158,49 @@ $documentTitle = $pageTitle . ' - Dashboard SENA';
             <h1><?php echo htmlspecialchars($pageTitle); ?></h1>
         </div>
         
-        <!-- Barra de Búsqueda -->
+        <!-- Barra de Búsqueda (PHP puro, sin JavaScript) -->
         <div class="navbar-search" style="position: relative;">
-            <i data-lucide="search"></i>
-            <input type="text" placeholder="Buscar..." class="search-input" id="globalSearch">
-            
-            <!-- Resultados de Búsqueda -->
-            <div class="search-results" id="searchResults"></div>
+            <form method="GET" action="" style="display:flex;align-items:center;gap:0;width:100%;">
+                <i data-lucide="search" style="width:18px;height:18px;color:#6b7280;flex-shrink:0;margin-right:8px;"></i>
+                <input type="text" name="q" placeholder="Buscar y presiona Enter..." class="search-input"
+                       value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"
+                       autocomplete="off">
+                <button type="submit" class="search-btn" title="Buscar">
+                    <i data-lucide="corner-down-left"></i>
+                </button>
+            </form>
+            <?php
+            // Mostrar resultados de búsqueda si hay query
+            $searchQuery = isset($_GET['q']) ? trim($_GET['q']) : '';
+            if (strlen($searchQuery) >= 2):
+                // Llamar directamente a la lógica de búsqueda
+                $searchResults = getSearchResults($searchQuery);
+                if (!empty($searchResults)):
+            ?>
+            <div class="search-results" id="searchResults" style="display:block;">
+                <?php foreach ($searchResults as $item): ?>
+                <a href="<?php echo htmlspecialchars($item['url']); ?>" class="search-result-item">
+                    <i data-lucide="<?php echo htmlspecialchars($item['icon']); ?>"></i>
+                    <div>
+                        <span class="result-title"><?php echo htmlspecialchars($item['title']); ?></span>
+                        <span class="result-subtitle"><?php echo htmlspecialchars($item['subtitle']); ?></span>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+            <?php
+                elseif (!empty($searchQuery)):
+            ?>
+            <div class="search-results" id="searchResults" style="display:block;">
+                <div class="search-result-item" style="cursor:default;">
+                    <i data-lucide="search-x"></i>
+                    <div><span class="result-title">Sin resultados para "<?php echo htmlspecialchars($searchQuery); ?>"</span></div>
+                </div>
+            </div>
+            <?php
+                endif;
+            endif;
+            ?>
         </div>
         
         <!-- Acciones del Header -->

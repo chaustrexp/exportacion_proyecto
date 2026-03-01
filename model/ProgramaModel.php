@@ -1,12 +1,42 @@
 <?php
+/**
+ * ============================================================
+ * ProgramaModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Programa de Formación.
+ * Un programa está vinculado a un título de programa y puede
+ * tener múltiples fichas asociadas.
+ *
+ * Tabla principal: programa
+ *   - prog_codigo                 INT (PK, AUTO_INCREMENT)
+ *   - prog_denominacion           VARCHAR(100)
+ *   - titulo_programa_titpro_id   INT (FK → titulo_programa)
+ *   - prog_tipo                   VARCHAR(30)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class ProgramaModel
+ *
+ * Proporciona operaciones CRUD sobre la tabla `programa`.
+ * getAll() usa GROUP_CONCAT para concatenar los números de ficha
+ * asociados a cada programa en una sola columna.
+ */
 class ProgramaModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
+
     
     public function getAll() {
         $stmt = $this->db->query("

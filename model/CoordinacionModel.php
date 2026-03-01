@@ -1,9 +1,37 @@
 <?php
+/**
+ * ============================================================
+ * CoordinacionModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Coordinación.
+ * Representa las dependencias organizativas del SENA a nivel
+ * nacional (Dirección de Formación, Secretaría General, etc.)
+ * y por centro de formación (Coordinación Académica, etc.).
+ *
+ * Tabla principal: coordinacion
+ *   - coord_id                 INT (PK, AUTO_INCREMENT)
+ *   - coord_nombre             VARCHAR(45)
+ *   - centro_formacion_cent_id INT (FK → centro_formacion)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class CoordinacionModel
+ *
+ * Proporciona operaciones CRUD sobre la tabla `coordinacion`.
+ * Incluye el nombre del centro de formación via LEFT JOIN en consultas.
+ */
 class CoordinacionModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton de la base de datos.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }

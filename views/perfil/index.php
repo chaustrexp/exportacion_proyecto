@@ -22,7 +22,7 @@ $pageTitle = "Mi Perfil";
         <div class="profile-card">
             <div class="profile-header">
                 <div class="profile-avatar">
-                    <i data-lucide="user-circle"></i>
+                    <img src="<?php echo BASE_PATH; ?>assets/images/foto-perfil.jpg" alt="Foto de perfil" class="avatar-lg">
                 </div>
                 <div class="profile-info">
                     <h2><?php echo htmlspecialchars($usuario['nombre'] ?? ''); ?></h2>

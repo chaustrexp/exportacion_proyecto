@@ -1,12 +1,46 @@
 <?php
+/**
+ * ============================================================
+ * AdministradorModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Administrador.
+ * Gestiona los usuarios con rol de administrador del sistema ProgSENA.
+ *
+ * Tabla principal: ADMINISTRADOR
+ *   - admin_id            INT (PK, AUTO_INCREMENT)
+ *   - admin_nombre        VARCHAR
+ *   - admin_correo        VARCHAR (único)
+ *   - admin_password      VARCHAR (hash bcrypt)
+ *   - admin_estado        VARCHAR ('Activo' | 'Inactivo')
+ *   - admin_ultimo_acceso DATETIME
+ *
+ * IMPORTANTE: Las contraseñas se almacenan con password_hash()
+ * y se verifican con password_verify() — nunca en texto plano.
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class AdministradorModel
+ *
+ * Provee acceso CRUD a la tabla ADMINISTRADOR.
+ * El método update() permite actualizar la contraseña solo si se proporciona
+ * un nuevo valor, evitando sobreescrituras accidentales.
+ */
 class AdministradorModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
+
     
     public function getAll() {
         $stmt = $this->db->query("SELECT * FROM ADMINISTRADOR ORDER BY admin_nombre");

@@ -1,14 +1,36 @@
 <?php
+/**
+ * ============================================================
+ * InstructorModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Instructor.
+ * Interactúa con la tabla `instructor` y realiza JOINs con
+ * `centro_formacion` para enriquecer los resultados.
+ *
+ * Tabla principal: instructor
+ *   - inst_id                 (PK, AUTO_INCREMENT)
+ *   - inst_nombres            VARCHAR(45)
+ *   - inst_apellidos          VARCHAR(45)
+ *   - inst_correo             VARCHAR(45)
+ *   - inst_telefono           BIGINT(10)
+ *   - centro_formacion_cent_id (FK → centro_formacion)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
 /**
- * Modelo InstructorModel
- * Gestiona la información de los instructores, incluyendo sus datos personales
- * y vinculación con la tabla de usuarios para autenticación.
+ * Class InstructorModel
+ *
+ * Proporciona operaciones CRUD sobre la tabla `instructor`.
+ * Utiliza PDO con sentencias preparadas para prevenir inyección SQL.
  */
 class InstructorModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }

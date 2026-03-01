@@ -10,11 +10,11 @@
             <p style="font-size: 14px; color: #6b7280; margin: 0;">Información completa de la competencia asignada</p>
         </div>
         <div class="btn-group">
-            <a href="editar.php?id=<?php echo safeHtml($registro, 'inscomp_id'); ?>" class="btn btn-primary">
+            <a href="<?php echo BASE_PATH; ?>instru_competencia/editar?id=<?php echo safeHtml($registro, 'inscomp_id'); ?>" class="btn btn-primary">
                 <i data-lucide="edit" style="width: 18px; height: 18px;"></i>
                 Editar
             </a>
-            <a href="index.php" class="btn btn-secondary">
+            <a href="<?php echo BASE_PATH; ?>instru_competencia/index" class="btn btn-secondary">
                 <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
                 Volver
             </a>
@@ -117,15 +117,15 @@
         <!-- Actions -->
         <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
             <div class="btn-group">
-                <a href="editar.php?id=<?php echo safeHtml($registro, 'inscomp_id'); ?>" class="btn btn-primary">
+                <a href="<?php echo BASE_PATH; ?>instru_competencia/editar?id=<?php echo safeHtml($registro, 'inscomp_id'); ?>" class="btn btn-primary">
                     <i data-lucide="edit" style="width: 18px; height: 18px;"></i>
                     Editar
                 </a>
-                <button onclick="confirmarEliminacion(<?php echo safeHtml($registro, 'inscomp_id'); ?>, 'competencia de instructor')" class="btn btn-danger">
+                <button onclick="confirmarEliminacion(<?php echo safeHtml($registro, 'inscomp_id'); ?>, 'instru_competencia')" class="btn btn-danger">
                     <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
                     Eliminar
                 </button>
-                <a href="index.php" class="btn btn-secondary">
+                <a href="<?php echo BASE_PATH; ?>instru_competencia/index" class="btn btn-secondary">
                     <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
                     Volver al Listado
                 </a>

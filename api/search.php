@@ -1,164 +1,160 @@
 <?php
 /**
  * API de Búsqueda Global
- * Busca en instructores, fichas, asignaciones, programas y ambientes
+ * Busca en instructores, fichas, programas, ambientes y asignaciones.
+ * Usa PDO via Database::getInstance() consistente con el resto del proyecto.
+ * Las URLs de resultados usan el sistema de routing del proyecto (BASE_PATH).
+ *
+ * Parámetro GET:
+ *   q  → término de búsqueda (mínimo 2 caracteres)
+ *
+ * Respuesta JSON: array de objetos { title, subtitle, url, icon, type }
  */
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
+
+// Cargar autenticación y configuración (también define BASE_PATH via config.php)
 require_once __DIR__ . '/../auth/check_auth.php';
 require_once __DIR__ . '/../conexion.php';
 
-// Obtener query de búsqueda
+// Obtener y validar el parámetro de búsqueda
 $query = isset($_GET['q']) ? trim($_GET['q']) : '';
 
-if (strlen($query) < 2) {
+if (mb_strlen($query) < 2) {
     echo json_encode([]);
     exit;
 }
 
+// Obtener conexión PDO
+$db   = Database::getInstance()->getConnection();
+$term = '%' . $query . '%';
 $results = [];
 
 try {
-    // Buscar en instructores
-    $stmt = $conn->prepare("
+    /* ── Instructores ── */
+    $stmt = $db->prepare("
         SELECT 
-            IdInstructor as id,
-            CONCAT(Nombre, ' ', Apellido) as title,
-            Especialidad as subtitle,
-            'instructor' as type
+            IdInstructor                     AS id,
+            CONCAT(Nombre, ' ', Apellido)    AS title,
+            Especialidad                     AS subtitle
         FROM instructor
-        WHERE CONCAT(Nombre, ' ', Apellido) LIKE ? 
-           OR Especialidad LIKE ?
-           OR Documento LIKE ?
+        WHERE CONCAT(Nombre, ' ', Apellido) LIKE :t
+           OR Especialidad                  LIKE :t2
+           OR Documento                     LIKE :t3
         LIMIT 5
     ");
-    $searchTerm = "%{$query}%";
-    $stmt->bind_param('sss', $searchTerm, $searchTerm, $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
+    $stmt->execute([':t' => $term, ':t2' => $term, ':t3' => $term]);
+    foreach ($stmt->fetchAll() as $row) {
         $results[] = [
-            'title' => $row['title'],
-            'subtitle' => 'Instructor - ' . $row['subtitle'],
-            'url' => BASE_PATH . 'views/instructor/ver.php?id=' . $row['id'],
-            'icon' => 'user',
-            'type' => 'instructor'
+            'title'    => $row['title'],
+            'subtitle' => 'Instructor - ' . ($row['subtitle'] ?: 'Sin especialidad'),
+            'url'      => BASE_PATH . 'instructor/ver/' . $row['id'],
+            'icon'     => 'user',
+            'type'     => 'instructor',
         ];
     }
-    
-    // Buscar en fichas
-    $stmt = $conn->prepare("
+
+    /* ── Fichas ── */
+    $stmt = $db->prepare("
         SELECT 
-            f.IdFicha as id,
-            f.NumeroFicha as title,
-            p.NombrePrograma as subtitle
+            f.IdFicha       AS id,
+            f.NumeroFicha   AS numero,
+            p.NombrePrograma AS programa
         FROM ficha f
         LEFT JOIN programa p ON f.IdPrograma = p.IdPrograma
-        WHERE f.NumeroFicha LIKE ?
-           OR p.NombrePrograma LIKE ?
+        WHERE f.NumeroFicha   LIKE :t
+           OR p.NombrePrograma LIKE :t2
         LIMIT 5
     ");
-    $stmt->bind_param('ss', $searchTerm, $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
+    $stmt->execute([':t' => $term, ':t2' => $term]);
+    foreach ($stmt->fetchAll() as $row) {
         $results[] = [
-            'title' => 'Ficha ' . $row['title'],
-            'subtitle' => $row['subtitle'] ?: 'Sin programa asignado',
-            'url' => BASE_PATH . 'views/ficha/ver.php?id=' . $row['id'],
-            'icon' => 'file-text',
-            'type' => 'ficha'
+            'title'    => 'Ficha ' . $row['numero'],
+            'subtitle' => $row['programa'] ?: 'Sin programa asignado',
+            'url'      => BASE_PATH . 'ficha/show/' . $row['id'],
+            'icon'     => 'file-text',
+            'type'     => 'ficha',
         ];
     }
-    
-    // Buscar en programas
-    $stmt = $conn->prepare("
+
+    /* ── Programas ── */
+    $stmt = $db->prepare("
         SELECT 
-            IdPrograma as id,
-            NombrePrograma as title,
-            CodigoPrograma as subtitle
+            IdPrograma      AS id,
+            NombrePrograma  AS title,
+            CodigoPrograma  AS codigo
         FROM programa
-        WHERE NombrePrograma LIKE ?
-           OR CodigoPrograma LIKE ?
+        WHERE NombrePrograma LIKE :t
+           OR CodigoPrograma LIKE :t2
         LIMIT 5
     ");
-    $stmt->bind_param('ss', $searchTerm, $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
+    $stmt->execute([':t' => $term, ':t2' => $term]);
+    foreach ($stmt->fetchAll() as $row) {
         $results[] = [
-            'title' => $row['title'],
-            'subtitle' => 'Programa - ' . $row['subtitle'],
-            'url' => BASE_PATH . 'views/programa/ver.php?id=' . $row['id'],
-            'icon' => 'book-open',
-            'type' => 'programa'
+            'title'    => $row['title'],
+            'subtitle' => 'Programa - Código: ' . ($row['codigo'] ?: '—'),
+            'url'      => BASE_PATH . 'programa/show/' . $row['id'],
+            'icon'     => 'book-open',
+            'type'     => 'programa',
         ];
     }
-    
-    // Buscar en ambientes
-    $stmt = $conn->prepare("
+
+    /* ── Ambientes ── */
+    $stmt = $db->prepare("
         SELECT 
-            IdAmbiente as id,
-            NombreAmbiente as title,
-            TipoAmbiente as subtitle
+            IdAmbiente      AS id,
+            NombreAmbiente  AS title,
+            TipoAmbiente    AS tipo
         FROM ambiente
-        WHERE NombreAmbiente LIKE ?
-           OR TipoAmbiente LIKE ?
+        WHERE NombreAmbiente LIKE :t
+           OR TipoAmbiente   LIKE :t2
         LIMIT 5
     ");
-    $stmt->bind_param('ss', $searchTerm, $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
+    $stmt->execute([':t' => $term, ':t2' => $term]);
+    foreach ($stmt->fetchAll() as $row) {
         $results[] = [
-            'title' => $row['title'],
-            'subtitle' => 'Ambiente - ' . $row['subtitle'],
-            'url' => BASE_PATH . 'views/ambiente/ver.php?id=' . $row['id'],
-            'icon' => 'map-pin',
-            'type' => 'ambiente'
+            'title'    => $row['title'],
+            'subtitle' => 'Ambiente - ' . ($row['tipo'] ?: 'Sin tipo'),
+            'url'      => BASE_PATH . 'ambiente/ver/' . $row['id'],
+            'icon'     => 'map-pin',
+            'type'     => 'ambiente',
         ];
     }
-    
-    // Buscar en asignaciones
-    $stmt = $conn->prepare("
+
+    /* ── Asignaciones ── */
+    $stmt = $db->prepare("
         SELECT 
-            a.IdAsignacion as id,
-            f.NumeroFicha as ficha,
-            CONCAT(i.Nombre, ' ', i.Apellido) as instructor,
-            amb.NombreAmbiente as ambiente
+            a.IdAsignacion                        AS id,
+            f.NumeroFicha                         AS ficha,
+            CONCAT(i.Nombre, ' ', i.Apellido)     AS instructor,
+            amb.NombreAmbiente                    AS ambiente
         FROM asignacion a
-        LEFT JOIN ficha f ON a.IdFicha = f.IdFicha
-        LEFT JOIN instructor i ON a.IdInstructor = i.IdInstructor
-        LEFT JOIN ambiente amb ON a.IdAmbiente = amb.IdAmbiente
-        WHERE f.NumeroFicha LIKE ?
-           OR CONCAT(i.Nombre, ' ', i.Apellido) LIKE ?
-           OR amb.NombreAmbiente LIKE ?
+        LEFT JOIN ficha       f   ON a.IdFicha      = f.IdFicha
+        LEFT JOIN instructor  i   ON a.IdInstructor = i.IdInstructor
+        LEFT JOIN ambiente    amb ON a.IdAmbiente   = amb.IdAmbiente
+        WHERE f.NumeroFicha                        LIKE :t
+           OR CONCAT(i.Nombre, ' ', i.Apellido)   LIKE :t2
+           OR amb.NombreAmbiente                   LIKE :t3
         LIMIT 5
     ");
-    $stmt->bind_param('sss', $searchTerm, $searchTerm, $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
+    $stmt->execute([':t' => $term, ':t2' => $term, ':t3' => $term]);
+    foreach ($stmt->fetchAll() as $row) {
         $results[] = [
-            'title' => 'Asignación - Ficha ' . $row['ficha'],
-            'subtitle' => $row['instructor'] . ' - ' . $row['ambiente'],
-            'url' => BASE_PATH . 'views/asignacion/ver.php?id=' . $row['id'],
-            'icon' => 'calendar',
-            'type' => 'asignacion'
+            'title'    => 'Asignación - Ficha ' . ($row['ficha'] ?: '—'),
+            'subtitle' => ($row['instructor'] ?: 'Sin instructor') . ' · ' . ($row['ambiente'] ?: 'Sin ambiente'),
+            'url'      => BASE_PATH . 'asignacion/ver/' . $row['id'],
+            'icon'     => 'calendar',
+            'type'     => 'asignacion',
         ];
     }
-    
-} catch (Exception $e) {
-    error_log('Error en búsqueda: ' . $e->getMessage());
+
+} catch (PDOException $e) {
+    error_log('API search error: ' . $e->getMessage());
+    // Devolver lo que se haya podido buscar hasta el momento (puede estar vacío)
 }
 
-// Limitar resultados totales a 15
+// Limitar a 15 resultados totales
 $results = array_slice($results, 0, 15);
 
-echo json_encode($results);
+echo json_encode($results, JSON_UNESCAPED_UNICODE);
 ?>

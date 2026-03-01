@@ -1,12 +1,42 @@
 <?php
+/**
+ * ============================================================
+ * CompetenciaProgramaModel.php
+ * ============================================================
+ * Modelo para la tabla de relación muchos-a-muchos entre
+ * Programa y Competencia. Permite asignar múltiples
+ * competencias a un programa de formación.
+ *
+ * Tabla pivot: competxprograma (alias: compet_programa)
+ *   - programa_prog_id    INT (FK → programa, PK compuesto)
+ *   - competencia_comp_id INT (FK → competencia, PK compuesto)
+ *
+ * No tiene AUTO_INCREMENT — la PK es la combinación de ambas FKs.
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class CompetenciaProgramaModel
+ *
+ * Gestiona las asignaciones de competencias a programas.
+ * Provee consultas con JOIN para enriquecer los datos,
+ * y delete() requiere ambas claves de la relación.
+ */
 class CompetenciaProgramaModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
+
     
     public function getAll() {
         $stmt = $this->db->query("

@@ -1,8 +1,38 @@
 <?php
+/**
+ * ============================================================
+ * AmbienteController.php
+ * ============================================================
+ * Controlador para la gestión CRUD de Ambientes de Formación.
+ * Un "ambiente" es un espacio físico (aula, laboratorio, taller)
+ * identificado por un código alfanumérico único (ej: 'A101').
+ *
+ * Rutas atendidas (definidas en routing.php):
+ *   GET  ambiente/index    → Listado de ambientes
+ *   GET  ambiente/crear    → Formulario de creación
+ *   POST ambiente/crear    → Guardar nuevo ambiente (con validación de código duplicado)
+ *   GET  ambiente/ver      → Detalle de un ambiente
+ *   GET  ambiente/editar   → Formulario de edición
+ *   POST ambiente/editar   → Guardar cambios
+ *   GET  ambiente/eliminar → Eliminar ambiente
+ *
+ * Acceso restringido a: Administrador, Coordinador.
+ *
+ * @package Controllers
+ */
+
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../model/AmbienteModel.php';
 require_once __DIR__ . '/../model/SedeModel.php';
 
+/**
+ * Class AmbienteController
+ *
+ * Implementa el CRUD completo para ambientes de formación.
+ * Usa SedeModel para poblar el selector de sedes en los formularios.
+ * En store() valida que el código del ambiente no exista previamente,
+ * ya que el amb_id es alfanumérico y no tiene AUTO_INCREMENT.
+ */
 class AmbienteController extends BaseController {
     private $sedeModel;
     

@@ -1,9 +1,34 @@
 <?php
+/**
+ * ============================================================
+ * SedeModel.php
+ * ============================================================
+ * Modelo de acceso a datos para la entidad Sede.
+ * Una sede agrupa los ambientes físicos donde se realizan
+ * las actividades de formación del SENA.
+ *
+ * Tabla principal: sede
+ *   - sede_id     INT (PK, AUTO_INCREMENT)
+ *   - sede_nombre VARCHAR(45)
+ *
+ * @package Models
+ */
+
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Class SedeModel
+ *
+ * Operaciones CRUD sobre la tabla `sede`.
+ */
 class SedeModel {
+
+    /** @var PDO Conexión activa a la base de datos */
     private $db;
-    
+
+    /**
+     * Constructor: obtiene la conexión singleton de la base de datos.
+     */
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }

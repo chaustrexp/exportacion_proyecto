@@ -1,6 +1,11 @@
 <?php
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Modelo InstructorModel
+ * Gestiona la información de los instructores, incluyendo sus datos personales
+ * y vinculación con la tabla de usuarios para autenticación.
+ */
 class InstructorModel {
     private $db;
     

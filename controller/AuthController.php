@@ -5,6 +5,11 @@
 
 require_once __DIR__ . '/BaseController.php';
 
+/**
+ * Controlador AuthController
+ * Gestiona los procesos de autenticación, validación de credenciales,
+ * gestión de sesiones y control de acceso al sistema.
+ */
 class AuthController extends BaseController {
     
     public function __construct() {
@@ -34,6 +39,10 @@ class AuthController extends BaseController {
 
     /**
      * Procesar inicio de sesión
+     */
+    /**
+     * Muestra la página de inicio de sesión.
+     * Si el usuario ya está autenticado, lo redirige al dashboard correspondiente.
      */
     public function login() {
         if (!$this->isMethod('POST')) {

@@ -144,6 +144,39 @@
         </div>
     </div>
 
+    <!-- Filtro Maestro de Programas (Prominente arriba) -->
+    <div style="padding: 24px 32px 0;">
+        <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="background: #E8F5E8; color: #39A900; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="graduation-cap" style="width: 22px; height: 22px;"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #1f2937;">Filtrar por Programa</h4>
+                    <p style="margin: 0; font-size: 11px; color: #6b7280;">Visualización rápida de asignaciones</p>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <select id="filtro-maestro-programa" onchange="sincronizarFiltroPrograma(this.value)" style="width: 100%; padding: 10px 16px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-weight: 600; color: #374151; cursor: pointer; background: #f9fafb;">
+                    <option value="">Mostrar Todos los Programas de Formación</option>
+                    <?php
+                    $programas = array_unique(array_column($registros, 'programa_nombre'));
+                    sort($programas);
+                    foreach ($programas as $prog):
+                        if ($prog):
+                    ?>
+                        <option value="<?php echo htmlspecialchars($prog); ?>">
+                            <?php echo htmlspecialchars($prog); ?>
+                        </option>
+                    <?php 
+                        endif;
+                    endforeach; 
+                    ?>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <!-- Stats -->
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 32px;">
         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
@@ -235,6 +268,7 @@
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">ID (Ficha)</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Programa</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Instructor</th>
+                        <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Competencia</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Ambiente</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Fecha Inicio</th>
                         <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase;">Estado</th>
@@ -265,6 +299,11 @@
                             </td>
                             <td style="padding: 16px;" data-filtro="instructor">
                                 <div style="color: #6b7280;"><?php echo htmlspecialchars($registro['instructor_nombre'] ?? ''); ?></div>
+                            </td>
+                            <td style="padding: 16px;" data-filtro="competencia">
+                                <div style="color: #6b7280; font-size: 13px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?php echo htmlspecialchars($registro['competencia_nombre'] ?? ''); ?>">
+                                    <?php echo htmlspecialchars($registro['competencia_nombre'] ?? 'N/A'); ?>
+                                </div>
                             </td>
                             <td style="padding: 16px; color: #6b7280;" data-filtro="ambiente">
                                 <?php echo htmlspecialchars($registro['ambiente_nombre'] ?? 'N/A'); ?>
@@ -304,6 +343,16 @@
 </div>
 
 <script>
+    // Función para sincronizar el filtro de programa maestro con el filtro de programa detallado
+    function sincronizarFiltroPrograma(valor) {
+        const filtroDetallado = document.getElementById('filtro-programa');
+        if (filtroDetallado) {
+            filtroDetallado.value = valor;
+            // Disparar evento para que la tabla se actualice
+            filtroDetallado.dispatchEvent(new Event('input'));
+        }
+    }
+
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
@@ -332,11 +381,18 @@
                         instructor: document.getElementById('filtro-instructor').value,
                         programa: document.getElementById('filtro-programa').value,
                         ambiente: document.getElementById('filtro-ambiente').value,
+                        competencia: document.getElementById('filtro-competencia')?.value || '',
                         fecha_desde: document.getElementById('filtro-fecha-desde').value,
                         fecha_hasta: document.getElementById('filtro-fecha-hasta').value,
                         estado: document.getElementById('filtro-estado').value
                     };
                     
+                    // Sincronizar hacia atrás el filtro maestro si el cambio viene del detallado
+                    const filtroMaestro = document.getElementById('filtro-maestro-programa');
+                    if (filtroMaestro && input.id === 'filtro-programa') {
+                        filtroMaestro.value = input.value;
+                    }
+
                     filtrarAsignaciones(filtros);
                     actualizarFiltrosActivos(filtros, 'form-filtros-asignacion');
                 });

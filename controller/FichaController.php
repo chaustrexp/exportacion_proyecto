@@ -6,7 +6,9 @@ require_once __DIR__ . '/../model/InstructorModel.php';
 require_once __DIR__ . '/../model/CoordinacionModel.php';
 
 /**
- * Controlador de Fichas
+ * Controlador FichaController
+ * Coordina las operaciones sobre las fichas de formación, gestionando su ciclo de vida,
+ * jornadas y vinculación con programas e instructores.
  */
 class FichaController extends BaseController {
     private $programaModel;
@@ -75,7 +77,8 @@ class FichaController extends BaseController {
     }
     
     /**
-     * Guardar nueva ficha
+     * Procesa el registro de una nueva ficha.
+     * Realiza validaciones estrictas de formato numérico y coherencia de fechas lectivas.
      */
     public function store() {
         if (!$this->isMethod('POST')) {
@@ -244,7 +247,11 @@ class FichaController extends BaseController {
         $this->redirect(BASE_PATH . 'ficha');
     }
     
-    // Método auxiliar para cargar vistas
+    /**
+     * Método auxiliar para el renderizado de vistas dentro del layout estándar.
+     * @param string $view Nombre del archivo de vista.
+     * @param array $data Datos compactados para la vista.
+     */
     private function loadView($view, $data = []) {
         extract($data);
         include __DIR__ . '/../views/layout/header.php';

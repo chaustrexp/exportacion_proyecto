@@ -1,7 +1,7 @@
 <?php
 /**
- * Punto de entrada principal del Dashboard SENA
- * Redirige al sistema de routing
+ * Punto de entrada principal (Front Controller)
+ * Este archivo inicia el entorno y redirige el flujo hacia el sistema de enrutamiento central.
  */
 
 // Cargar configuración

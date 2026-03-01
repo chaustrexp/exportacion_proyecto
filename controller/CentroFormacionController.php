@@ -29,42 +29,18 @@ class CentroFormacionController extends BaseController {
     }
     
     /**
-     * Mostrar formulario de creación
+     * Mostrar formulario de creación (DESACTIVADO)
      */
     public function crear() {
-        $this->render('crear', [
-            'pageTitle' => 'Nuevo Centro de Formación'
-        ]);
+        $_SESSION['error'] = 'La creación de nuevos centros está restringida.';
+        $this->redirect(BASE_PATH . 'centro_formacion');
     }
     
     /**
-     * Guardar nuevo centro de formación
+     * Guardar nuevo centro de formación (DESACTIVADO)
      */
     public function store() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect(BASE_PATH . 'centro_formacion');
-            return;
-        }
-        
-        // Validar campos requeridos
-        $required = ['cent_nombre'];
-        $errors = $this->validate($_POST, $required);
-        
-        if (!empty($errors)) {
-            $_SESSION['error'] = 'Por favor complete todos los campos requeridos';
-            $this->redirect(BASE_PATH . 'centro_formacion/crear');
-            return;
-        }
-        
-        // Crear centro
-        $result = $this->model->create($_POST);
-        
-        if ($result) {
-            $_SESSION['success'] = 'Centro de formación creado exitosamente';
-        } else {
-            $_SESSION['error'] = 'Error al crear el centro de formación';
-        }
-        
+        $_SESSION['error'] = 'La creación de nuevos centros está restringida.';
         $this->redirect(BASE_PATH . 'centro_formacion');
     }
     
@@ -136,17 +112,10 @@ class CentroFormacionController extends BaseController {
     }
     
     /**
-     * Eliminar centro de formación
+     * Eliminar centro de formación (DESACTIVADO)
      */
     public function eliminar($id) {
-        $result = $this->model->delete($id);
-        
-        if ($result) {
-            $_SESSION['success'] = 'Centro de formación eliminado exitosamente';
-        } else {
-            $_SESSION['error'] = 'Error al eliminar el centro de formación';
-        }
-        
+        $_SESSION['error'] = 'La eliminación de centros está restringida.';
         $this->redirect(BASE_PATH . 'centro_formacion');
     }
 }

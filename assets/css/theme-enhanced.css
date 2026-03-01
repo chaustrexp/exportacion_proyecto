@@ -140,8 +140,8 @@
 
 /* Mejora de Dashboard Header */
 .sena-enhanced-theme .dashboard-header {
-    background: linear-gradient(135deg, rgba(57, 169, 0, 0.08) 0%, rgba(0, 120, 50, 0.08) 100%);
-    border: 1px solid rgba(57, 169, 0, 0.15);
+    background: #ffffff;
+    border-bottom: 1px solid var(--theme-gray-200);
 }
 
 /* Mejora de Iconos */

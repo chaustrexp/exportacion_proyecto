@@ -4,6 +4,11 @@
  * Clase base para todos los controladores del sistema
  */
 
+/**
+ * Controlador Base (clase abstracta)
+ * Proporciona métodos de utilidad comunes a todos los controladores,
+ * incluyendo renderizado de vistas, validación, redirección y gestión de respuestas JSON.
+ */
 abstract class BaseController {
     protected $model;
     protected $viewPath;
@@ -17,9 +22,9 @@ abstract class BaseController {
     }
     
     /**
-     * Renderizar una vista
-     * @param string $view Nombre de la vista
-     * @param array $data Datos a pasar a la vista
+     * Renderiza una vista dentro del layout estándar (header, sidebar, footer).
+     * @param string $view Nombre de la vista relativa a la carpeta del controlador.
+     * @param array $data Mapa de datos que serán extraídos a variables locales en la vista.
      */
     protected function render($view, $data = []) {
         // Extraer datos para usar en la vista
@@ -68,10 +73,11 @@ abstract class BaseController {
     }
     
     /**
-     * Validar datos requeridos
-     * @param array $data Datos a validar
-     * @param array $required Campos requeridos
-     * @return array Errores encontrados
+     * Valida un conjunto de datos contra una lista de campos requeridos.
+     * Asegura que los campos existan y no estén vacíos (permitiendo 0 numérico).
+     * @param array $data Conjunto de datos a validar (generalmente $_POST).
+     * @param array $required Lista de nombres de campos obligatorios.
+     * @return array Mapa de errores encontrados.
      */
     protected function validate($data, $required) {
         $errors = [];

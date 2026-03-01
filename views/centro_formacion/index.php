@@ -7,12 +7,8 @@ $registros = $data['registros'] ?? [];
     <div style="padding: 32px 32px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb;">
         <div>
             <h1 style="font-size: 28px; font-weight: 700; color: #1f2937; margin: 0 0 4px;">Centros de Formación</h1>
-            <p style="font-size: 14px; color: #6b7280; margin: 0;">Gestiona los centros de formación del SENA</p>
+            <p style="font-size: 14px; color: #6b7280; margin: 0;">Centros de formación autorizados del SENA</p>
         </div>
-        <a href="<?php echo BASE_PATH; ?>centro_formacion/crear" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
-            <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
-            Nuevo Centro
-        </a>
     </div>
 
     <!-- Alert -->
@@ -79,7 +75,6 @@ $registros = $data['registros'] ?? [];
                                 <div class="btn-group" style="justify-content: flex-end;">
                                     <a href="<?php echo BASE_PATH; ?>centro_formacion/ver/<?php echo $registro['cent_id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
                                     <a href="<?php echo BASE_PATH; ?>centro_formacion/editar/<?php echo $registro['cent_id']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="<?php echo BASE_PATH; ?>centro_formacion/eliminar/<?php echo $registro['cent_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar este centro?')">Eliminar</a>
                                 </div>
                             </td>
                         </tr>

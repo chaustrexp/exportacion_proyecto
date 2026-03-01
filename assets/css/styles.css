@@ -41,7 +41,7 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #e8f5e9;
+    background: #ffffff;
     color: var(--gris-texto);
     font-size: 14px;
     line-height: 1.6;
@@ -50,21 +50,36 @@ body {
 }
 
 /* Efecto glassmorphism para contenedores blancos */
-.main-content > div[style*="background: white"],
+.main-content>div[style*="background: white"],
 .main-content div[style*="background: white"] {
     background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     line-height: 1.2;
     color: var(--gris-oscuro);
 }
 
-p, span, a, button, input, select, textarea, label, td, th, li {
+p,
+span,
+a,
+button,
+input,
+select,
+textarea,
+label,
+td,
+th,
+li {
     font-family: 'Inter', sans-serif;
 }
 
@@ -75,7 +90,7 @@ p, span, a, button, input, select, textarea, label, td, th, li {
     top: 0;
     width: 260px;
     height: 100vh;
-    background: #e8f5e9;
+    background: #ffffff;
     color: #1f2937;
     overflow-y: auto;
     overflow-x: hidden;
@@ -101,8 +116,8 @@ p, span, a, button, input, select, textarea, label, td, th, li {
 /* Sidebar Header */
 .sidebar-header {
     padding: 28px 20px;
-    border-bottom: 1px solid rgba(57, 169, 0, 0.12);
-    background: linear-gradient(135deg, rgba(57, 169, 0, 0.08) 0%, rgba(57, 169, 0, 0.03) 100%);
+    border-bottom: 1px solid rgba(57, 169, 0, 0.08);
+    background: #ffffff;
 }
 
 .logo-wrapper {
@@ -312,7 +327,7 @@ p, span, a, button, input, select, textarea, label, td, th, li {
     top: 0;
     right: 0;
     height: 50px;
-    background: #e8f5e9;
+    background: #ffffff;
     display: flex;
     align-items: center;
     padding: 10px 32px;
@@ -344,8 +359,8 @@ p, span, a, button, input, select, textarea, label, td, th, li {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: white;
-    border: 1px solid #c8e6c9;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 6px 14px;
     flex: 1 1 auto;
@@ -1390,67 +1405,67 @@ select.form-control {
     .sidebar {
         width: 260px;
     }
-    
+
     .navbar {
         left: 260px;
         padding: 8px 16px;
         gap: 12px;
     }
-    
+
     .navbar-title h1 {
         font-size: 14px;
     }
-    
+
     /* Ocultar búsqueda en móvil */
     .navbar-search {
         display: none;
     }
-    
+
     /* Reducir gap de acciones */
     .navbar-actions {
         gap: 6px;
     }
-    
+
     .navbar-btn {
         width: 32px;
         height: 32px;
     }
-    
+
     .navbar-btn i {
         width: 18px;
         height: 18px;
     }
-    
+
     /* Ocultar texto del botón logout */
     .btn-logout span {
         display: none;
     }
-    
+
     .btn-logout {
         padding: 6px 8px;
     }
-    
+
     .main-content {
         margin-left: 260px;
     }
-    
+
     .stats-container {
         grid-template-columns: 1fr;
     }
-    
+
     .detail-row {
         grid-template-columns: 1fr;
         gap: 8px;
     }
-    
+
     .table-container {
         padding: 16px;
     }
-    
+
     .form-container {
         padding: 20px;
     }
-    
+
     .navbar-user .user-details {
         display: none;
     }
@@ -1460,25 +1475,26 @@ select.form-control {
     .sidebar {
         width: 220px;
     }
-    
+
     .navbar {
         left: 220px;
         padding: 8px 12px;
         gap: 8px;
     }
-    
+
     .main-content {
         margin-left: 220px;
         padding: 16px;
     }
-    
+
     .navbar-title h1 {
         font-size: 13px;
     }
-    
+
     /* Ocultar algunos botones en móvil pequeño */
     .navbar-actions .navbar-btn:last-child {
-        display: none; /* Ocultar botón de ayuda */
+        display: none;
+        /* Ocultar botón de ayuda */
     }
 }
 
@@ -1739,7 +1755,8 @@ select.form-control {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-    text-transform: uppercase;
+
+text-transform: uppercase;
 }
 
 .badge-id {
@@ -1792,39 +1809,39 @@ select.form-control {
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .dashboard-title {
         font-size: 28px;
     }
-    
+
     .dashboard-subtitle {
         font-size: 14px;
     }
-    
+
     .stat-card {
         padding: 24px;
     }
-    
+
     .stat-icon {
         width: 56px;
         height: 56px;
     }
-    
+
     .stat-icon i {
         width: 28px;
         height: 28px;
     }
-    
+
     .stat-value {
         font-size: 32px;
     }
-    
+
     .section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
     }
-    
+
     .table-section {
         padding: 20px;
     }
@@ -1985,30 +2002,32 @@ select.form-control {
     }
 }
 
- / *   L o g o u t   B u t t o n   S i d e b a r   * / 
- . l o g o u t - b t n - s i d e b a r   { 
-         w i d t h :   3 6 p x ; 
-         h e i g h t :   3 6 p x ; 
-         d i s p l a y :   f l e x ; 
-         a l i g n - i t e m s :   c e n t e r ; 
-         j u s t i f y - c o n t e n t :   c e n t e r ; 
-         b a c k g r o u n d :   r g b a ( 2 2 0 ,   3 8 ,   3 8 ,   0 . 1 ) ; 
-         c o l o r :   # d c 2 6 2 6 ; 
-         b o r d e r - r a d i u s :   8 p x ; 
-         t r a n s i t i o n :   a l l   0 . 2 s   e a s e ; 
-         t e x t - d e c o r a t i o n :   n o n e ; 
-         m a r g i n - l e f t :   a u t o ; 
- } 
- 
- . l o g o u t - b t n - s i d e b a r : h o v e r   { 
-         b a c k g r o u n d :   # d c 2 6 2 6 ; 
-         c o l o r :   w h i t e ; 
-         t r a n s f o r m :   s c a l e ( 1 . 0 5 ) ; 
- } 
- 
- . l o g o u t - b t n - s i d e b a r   i   { 
-         w i d t h :   2 0 p x ; 
-         h e i g h t :   2 0 p x ; 
- } 
-  
- 
+ / *   L o g o u t   B u t t o n   S i d e b a r   * /   . l o g o u t - b t n - s i d e b a r    {
+               w i d t h :    3 6 p x ;
+               h e i g h t :    3 6 p x ;
+               d i s p l a y :    f l e x ;
+               a l i g n - i t e m s :    c e n t e r ;
+               j u s t i f y - c o n t e n t :    c e n t e r ;
+               b a c k g r o u n d :    r g b a ( 2 2 0 ,    3 8 ,    3 8 ,    0 . 1 ) ;
+               c o l o r :    # d c 2 6 2 6 ;
+               b o r d e r - r a d i u s :    8 p x ;
+               t r a n s i t i o n :    a l l   0 . 2 s   e a s e ;
+               t e x t - d e c o r a t i o n :    n o n e ;
+               m a r g i n - l e f t :    a u t o ;
+       
+}
+
+     . l o g o u t - b t n - s i d e b a r : h o v e r    {
+               b a c k g r o u n d :    # d c 2 6 2 6 ;
+               c o l o r :    w h i t e ;
+               t r a n s f o r m :    s c a l e ( 1 . 0 5 ) ;
+       
+}
+
+     . l o g o u t - b t n - s i d e b a r   i    {
+               w i d t h :    2 0 p x ;
+               h e i g h t :    2 0 p x ;
+       
+}
+
+       

@@ -3,17 +3,17 @@
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /exportacion_proyecto/
+    RewriteBase /exportacion_proyecto-main/
     
     # Permitir acceso directo a archivos y directorios existentes
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     
     # Excluir rutas específicas del routing
-    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/api/
-    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/assets/
-    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/views/
-    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto/verificar_conexion\.php
+    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto-main/api/
+    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto-main/assets/
+    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto-main/views/
+    RewriteCond %{REQUEST_URI} !^/exportacion_proyecto-main/verificar_conexion\.php
     
     # Redirigir todo lo demás al routing.php
     RewriteRule ^(.*)$ routing.php [QSA,L]

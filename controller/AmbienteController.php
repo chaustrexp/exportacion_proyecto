@@ -71,9 +71,7 @@ class AmbienteController extends BaseController {
         }
     }
     
-    public function ver() {
-        $id = $this->get('id', 0);
-        
+    public function ver($id = null) {
         if (!$id) {
             $_SESSION['error'] = 'ID no válido';
             $this->redirect(BASE_PATH . 'ambiente');
@@ -94,9 +92,7 @@ class AmbienteController extends BaseController {
         $this->render('ver', $data);
     }
     
-    public function editar() {
-        $id = $this->get('id', 0);
-        
+    public function editar($id = null) {
         if (!$id) {
             $_SESSION['error'] = 'ID no válido';
             $this->redirect(BASE_PATH . 'ambiente');
@@ -145,9 +141,7 @@ class AmbienteController extends BaseController {
         }
     }
     
-    public function eliminar() {
-        $id = $this->get('id', 0);
-        
+    public function eliminar($id = null) {
         if (!$id) {
             $_SESSION['error'] = 'ID no válido';
             $this->redirect(BASE_PATH . 'ambiente');

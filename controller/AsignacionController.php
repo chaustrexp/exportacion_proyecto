@@ -27,7 +27,9 @@ class AsignacionController extends BaseController {
     }
     
     /**
-     * Listar todas las asignaciones
+     * Muestra el listado principal de asignaciones.
+     * Carga datos de todas las entidades relacionadas para los filtros y el calendario.
+     * Realiza cálculos de estadísticas en tiempo real (activas vs totales).
      */
     public function index() {
         verificarRol(['Administrador', 'Coordinador']);
@@ -81,7 +83,8 @@ class AsignacionController extends BaseController {
     }
     
     /**
-     * Guardar nueva asignación
+     * Procesa y persiste una nueva asignación.
+     * Incluye validaciones de campos obligatorios, manejo de errores y redirección dinámica.
      */
     public function store() {
         verificarRol(['Administrador', 'Coordinador']);
@@ -260,7 +263,8 @@ class AsignacionController extends BaseController {
     }
     
     /**
-     * Obtener detalle de asignación (AJAX)
+     * Recupera los detalles de una asignación específica mediante AJAX.
+     * Formatea fechas y calcula estados con colores para el componente del calendario.
      */
     public function getAsignacion() {
         $id = $this->get('id', 0);

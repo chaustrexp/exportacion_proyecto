@@ -1,4 +1,11 @@
 <?php
+/**
+ * Layout Header
+ * Parte superior común de la aplicación. Gestiona la inclusión de librerías CSS,
+ * fuentes (Lucide, Google Fonts) y la identidad visual del SENA.
+ * También verifica la autenticación de sesión en cada carga de página protegida.
+ */
+
 // Verificar autenticación
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -149,13 +156,6 @@ $documentTitle = $pageTitle . ' - Dashboard SENA';
             </button>
         </div>
         
-        <!-- Botón Cerrar Sesión -->
-        <div class="navbar-user">
-            <a href="<?php echo BASE_PATH; ?>auth/logout.php" class="btn-logout">
-                <i data-lucide="log-out"></i>
-                <span>Cerrar Sesión</span>
-            </a>
-        </div>
     </nav>
 
     <!-- Modal de Ayuda -->

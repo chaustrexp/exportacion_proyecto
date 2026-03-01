@@ -14,11 +14,12 @@ $pageTitle = 'Mi Dashboard - Instructor';
     <link rel="stylesheet" href="<?php echo BASE_PATH; ?>assets/css/theme-enhanced.css">
     <style>
         .instructor-header {
-            background: linear-gradient(135deg, #39a900 0%, #2d8500 100%);
-            color: white;
+            background: #ffffff;
+            color: #1f2937;
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
+            border: 1px solid #e5e7eb;
         }
         
         .instructor-header h1 {

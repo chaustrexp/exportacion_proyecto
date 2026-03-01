@@ -141,11 +141,20 @@ class ProgramaController extends BaseController {
      * Eliminar programa
      */
     public function delete($id) {
+        if (!$id) {
+            $_SESSION['error'] = 'ID de programa no válido';
+            $this->redirect(BASE_PATH . 'programa');
+        }
+        
         try {
             $this->model->delete($id);
             $_SESSION['success'] = 'Programa eliminado exitosamente';
         } catch (Exception $e) {
-            $_SESSION['error'] = 'Error: ' . $e->getMessage();
+            if (strpos($e->getMessage(), '1451') !== false || strpos($e->getMessage(), 'foreign key constraint fails') !== false) {
+                $_SESSION['error'] = 'No se puede eliminar el programa porque tiene fichas o competencias asociadas. Debe eliminarlas primero.';
+            } else {
+                $_SESSION['error'] = 'Error al eliminar el programa: ' . $e->getMessage();
+            }
         }
         
         $this->redirect(BASE_PATH . 'programa');

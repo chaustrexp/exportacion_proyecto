@@ -1,0 +1,35 @@
+Field	Type	Null	Key	Default	Extra
+instructor_inst_id	int(11)	NO	MUL	NULL	
+instructor_id	int(11)	YES	MUL	NULL	
+asig_fecha_ini	datetime	NO		NULL	
+asig_fecha_fin	datetime	NO		NULL	
+ficha_fich_id	int(11)	NO	MUL	NULL	
+ambiente_amb_id	varchar(5)	NO	MUL	NULL	
+competencia_comp_id	int(11)	NO	MUL	NULL	
+asig_id	int(11)	NO	PRI	NULL	auto_increment
+Field	Type	Null	Key	Default	Extra
+inst_id	int(11)	NO	PRI	NULL	auto_increment
+inst_nombres	varchar(45)	YES		NULL	
+inst_apellidos	varchar(45)	YES		NULL	
+inst_correo	varchar(45)	YES		NULL	
+inst_telefono	bigint(10)	YES		NULL	
+centro_formacion_cent_id	int(11)	NO	MUL	NULL	
+Field	Type	Null	Key	Default	Extra
+comp_id	int(11)	NO	PRI	NULL	auto_increment
+comp_nombre_corto	varchar(30)	NO		NULL	
+comp_horas	int(11)	NO		NULL	
+comp_nombre_unidad_competencia	varchar(150)	NO		NULL	
+Field	Type	Null	Key	Default	Extra
+fich_id	int(11)	NO	PRI	NULL	auto_increment
+fich_numero	varchar(20)	YES		NULL	
+programa_prog_id	int(11)	NO	MUL	NULL	
+instructor_inst_id_lider	int(11)	NO	MUL	NULL	
+fich_jornada	varchar(20)	NO		NULL	
+fich_fecha_ini_lectiva	date	YES		NULL	
+fich_fecha_fin_lectiva	date	YES		NULL	
+coordinacion_coord_id	int(11)	NO	MUL	NULL	
+Field	Type	Null	Key	Default	Extra
+prog_codigo	int(11)	NO	PRI	NULL	auto_increment
+prog_denominacion	varchar(100)	NO		NULL	
+titulo_programa_titpro_id	int(11)	NO	MUL	NULL	
+prog_tipo	varchar(30)	NO		NULL	

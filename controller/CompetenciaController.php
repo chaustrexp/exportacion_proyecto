@@ -40,16 +40,14 @@ class CompetenciaController extends BaseController {
         }
     }
     
-    public function ver() {
-        $id = $this->get('id', 0);
+    public function ver($id = null) {
         if (!$id) $this->redirect(BASE_PATH . 'competencia');
         $registro = $this->model->getById($id);
         if (!$registro) $this->redirect(BASE_PATH . 'competencia?msg=no_encontrado');
         $this->render('ver', ['pageTitle' => 'Ver Competencia', 'registro' => $registro]);
     }
     
-    public function editar() {
-        $id = $this->get('id', 0);
+    public function editar($id = null) {
         if (!$id) $this->redirect(BASE_PATH . 'competencia');
         if ($this->isMethod('POST')) return $this->update($id);
         $registro = $this->model->getById($id);
@@ -72,14 +70,13 @@ class CompetenciaController extends BaseController {
         }
     }
     
-    public function eliminar() {
-        $id = $this->get('id', 0);
+    public function eliminar($id = null) {
         if (!$id) $this->redirect(BASE_PATH . 'competencia');
         try {
             $this->model->delete($id);
             $this->redirect(BASE_PATH . 'competencia?msg=eliminado');
         } catch (Exception $e) {
-            $_SESSION['error'] = 'Error: ' . $e->getMessage();
+            $_SESSION['error'] = 'No se puede eliminar la competencia porque está siendo usada en otros registros (comprueba programas o asignaciones).';
             $this->redirect(BASE_PATH . 'competencia');
         }
     }

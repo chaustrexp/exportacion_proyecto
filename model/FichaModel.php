@@ -1,6 +1,11 @@
 <?php
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Modelo FichaModel
+ * Centraliza el acceso a la tabla 'ficha', gestionando la información de fechas de etapa lectiva
+ * y vinculación con programas de formación.
+ */
 class FichaModel {
     private $db;
     

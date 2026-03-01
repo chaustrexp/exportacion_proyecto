@@ -1,13 +1,24 @@
 <?php
 require_once __DIR__ . '/../conexion.php';
 
+/**
+ * Modelo AsignacionModel
+ * Gestiona la lógica de persistencia y consultas relacionadas con las asignaciones de instructores,
+ * ambientes y fichas, integrando múltiples relaciones mediante JOINs.
+ */
 class AsignacionModel {
+    /** @var PDO Conexión a la base de datos */
     private $db;
     
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
     
+    /**
+     * Obtiene el listado completo de asignaciones con detalles legibles.
+     * Realiza JOINs con las tablas Ficha, Programa, Instructor, Ambiente y Competencia.
+     * @return array Listado de asignaciones.
+     */
     public function getAll() {
         $stmt = $this->db->query("
             SELECT a.*,
@@ -32,6 +43,11 @@ class AsignacionModel {
         return $stmt->fetchAll();
     }
     
+    /**
+     * Obtiene una asignación específica mediante su identificador único.
+     * @param int $id Identificador de la asignación.
+     * @return array|false Datos de la asignación o false si no existe.
+     */
     public function getById($id) {
         $stmt = $this->db->prepare("
             SELECT a.*,
@@ -62,6 +78,11 @@ class AsignacionModel {
         return $stmt->fetch();
     }
     
+    /**
+     * Crea un nuevo registro de asignación en la base de datos.
+     * @param array $data Conjunto de datos (ID instructor, ficha, fechas, etc.).
+     * @return bool True si la operación fue exitosa.
+     */
     public function create($data) {
         $stmt = $this->db->prepare("
             INSERT INTO asignacion (instructor_inst_id, instructor_id, asig_fecha_ini, asig_fecha_fin, ficha_fich_id, ambiente_amb_id, competencia_comp_id) 

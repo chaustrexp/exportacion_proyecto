@@ -86,9 +86,9 @@
                             </td>
                             <td style="padding: 16px;">
                                 <div class="btn-group" style="justify-content: flex-end;">
-                                    <a href="<?php echo BASE_PATH; ?>ambiente/ver?id=<?php echo $registro['amb_id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
-                                    <a href="<?php echo BASE_PATH; ?>ambiente/editar?id=<?php echo $registro['amb_id']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <button onclick="confirmarEliminacion(<?php echo $registro['amb_id']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <a href="<?php echo BASE_PATH; ?>ambiente/ver/<?php echo $registro['amb_id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
+                                    <a href="<?php echo BASE_PATH; ?>ambiente/editar/<?php echo $registro['amb_id']; ?>" class="btn btn-primary btn-sm">Editar</a>
+                                    <button onclick="confirmarEliminacion('<?php echo $registro['amb_id']; ?>')" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -118,7 +118,7 @@
     
     function confirmarEliminacion(id) {
         if (confirm('¿Está seguro de eliminar este ambiente?')) {
-            window.location.href = `<?php echo BASE_PATH; ?>ambiente/eliminar?id=${id}`;
+            window.location.href = `<?php echo BASE_PATH; ?>ambiente/eliminar/${id}`;
         }
     }
 </script>

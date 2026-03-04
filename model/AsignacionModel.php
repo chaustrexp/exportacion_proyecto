@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../conexion.php';
+require_once __DIR__ . '/../config/conexion.php';
 
 /**
  * Modelo AsignacionModel
@@ -259,6 +259,7 @@ class AsignacionModel {
     }
 
     public function countByInstructor($instructor_id) {
+        error_log("DASHBOARD_DEBUG_MODEL: countByInstructor called with instructor_id: {$instructor_id}");
         $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM asignacion WHERE instructor_id = ? OR instructor_inst_id = ?");
         $stmt->execute([$instructor_id, $instructor_id]);
         return $stmt->fetch()['total'];
@@ -286,6 +287,7 @@ class AsignacionModel {
     }
 
     public function getRecentByInstructor($instructor_id, $limit = 5) {
+        error_log("DASHBOARD_DEBUG_MODEL: getRecentByInstructor called with instructor_id: {$instructor_id}");
         $stmt = $this->db->prepare("
             SELECT a.*, f.fich_id as ficha_numero, p.prog_denominacion as programa_nombre,
                    amb.amb_nombre as ambiente_nombre, c.comp_nombre_corto as competencia_nombre,

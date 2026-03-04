@@ -27,25 +27,42 @@ class InstructorDashboardController extends BaseController {
             return;
         }
         
+        // Determinar qué instructor estamos viendo
+        $view_instructor_id = isset($_GET['view_instructor_id']) ? (int)$_GET['view_instructor_id'] : $instructor_id;
+        
+        // Obtener la lista de instructores para el selector
+        $instructores = $this->instructorModel->getActivos();
+        
         // Obtener información del usuario/instructor
-        $instructor_info = [
-            'inst_nombres' => $_SESSION['nombre'] ?? $_SESSION['usuario_nombre']
-        ];
+        if ($view_instructor_id == $instructor_id) {
+            $instructor_info = [
+                'inst_id' => $instructor_id,
+                'inst_nombres' => $_SESSION['nombre'] ?? $_SESSION['usuario_nombre'],
+                'is_owner' => true
+            ];
+        } else {
+            $viewed_instructor = $this->instructorModel->getById($view_instructor_id);
+            $instructor_info = [
+                'inst_id' => $view_instructor_id,
+                'inst_nombres' => $viewed_instructor ? $viewed_instructor['inst_nombres'] . ' ' . $viewed_instructor['inst_apellidos'] : 'Instructor Desconocido',
+                'is_owner' => false
+            ];
+        }
         
         // Obtener información del instructor si es necesario
         $instructor = $instructor_info;
         
         // Obtener fichas asignadas al instructor
-        $fichas = $this->getFichasInstructor($instructor_id);
+        $fichas = $this->getFichasInstructor($view_instructor_id);
         
         // Obtener asignaciones del instructor
-        $asignaciones = $this->getAsignacionesInstructor($instructor_id);
+        $asignaciones = $this->getAsignacionesInstructor($view_instructor_id);
         
         // Obtener estadísticas
-        $estadisticas = $this->getEstadisticas($instructor_id);
+        $estadisticas = $this->getEstadisticas($view_instructor_id);
         
         // Obtener asignaciones para el calendario (filtradas por instructor)
-        $asignacionesCalendario = $this->asignacionModel->getForCalendar(date('m'), date('Y'), $instructor_id);
+        $asignacionesCalendario = $this->asignacionModel->getForCalendar(date('m'), date('Y'), $view_instructor_id);
         
         // Cargar vista
         require_once __DIR__ . '/../views/instructor_dashboard/index.php';
@@ -161,7 +178,20 @@ class InstructorDashboardController extends BaseController {
             return;
         }
         
-        $fichas = $this->getFichasInstructor($instructor_id);
+        $view_instructor_id = isset($_GET['view_instructor_id']) ? (int)$_GET['view_instructor_id'] : $instructor_id;
+        
+        // Obtener la lista de instructores para el selector
+        $instructores = $this->instructorModel->getActivos();
+        
+        // Obtener información para el título
+        if ($view_instructor_id == $instructor_id) {
+            $instructor_nombre = $_SESSION['nombre'] ?? $_SESSION['usuario_nombre'];
+        } else {
+            $viewed_instructor = $this->instructorModel->getById($view_instructor_id);
+            $instructor_nombre = $viewed_instructor ? $viewed_instructor['inst_nombres'] . ' ' . $viewed_instructor['inst_apellidos'] : '';
+        }
+        
+        $fichas = $this->getFichasInstructor($view_instructor_id);
         
         require_once __DIR__ . '/../views/instructor_dashboard/mis_fichas.php';
     }
@@ -198,7 +228,20 @@ class InstructorDashboardController extends BaseController {
             ORDER BY a.asig_fecha_ini DESC
         ");
         
-        $stmt->execute([$instructor_id]);
+        $view_instructor_id = isset($_GET['view_instructor_id']) ? (int)$_GET['view_instructor_id'] : $instructor_id;
+        
+        // Obtener la lista de instructores para el selector
+        $instructores = $this->instructorModel->getActivos();
+        
+        // Obtener información para el título
+        if ($view_instructor_id == $instructor_id) {
+            $instructor_nombre = $_SESSION['nombre'] ?? $_SESSION['usuario_nombre'];
+        } else {
+            $viewed_instructor = $this->instructorModel->getById($view_instructor_id);
+            $instructor_nombre = $viewed_instructor ? $viewed_instructor['inst_nombres'] . ' ' . $viewed_instructor['inst_apellidos'] : '';
+        }
+        
+        $stmt->execute([$view_instructor_id]);
         $asignaciones = $stmt->fetchAll();
         
         require_once __DIR__ . '/../views/instructor_dashboard/mis_asignaciones.php';

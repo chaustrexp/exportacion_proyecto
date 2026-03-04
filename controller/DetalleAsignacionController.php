@@ -84,9 +84,7 @@ class DetalleAsignacionController extends BaseController {
     /**
      * Ver detalle
      */
-    public function ver() {
-        $id = $this->get('id', 0);
-        
+    public function ver($id = 0) {
         if (!$id) {
             $_SESSION['error'] = 'ID no válido';
             $this->redirect(BASE_PATH . 'detalle_asignacion');
@@ -110,9 +108,7 @@ class DetalleAsignacionController extends BaseController {
     /**
      * Mostrar formulario de edición
      */
-    public function editar() {
-        $id = $this->get('id', 0);
-        
+    public function editar($id = 0) {
         if (!$id) {
             $_SESSION['error'] = 'ID no válido';
             $this->redirect(BASE_PATH . 'detalle_asignacion');
@@ -172,9 +168,7 @@ class DetalleAsignacionController extends BaseController {
     /**
      * Eliminar detalle
      */
-    public function eliminar() {
-        $id = $this->get('id', 0);
-        
+    public function eliminar($id = 0) {
         if (!$id) {
             $_SESSION['error'] = 'ID no válido';
             $this->redirect(BASE_PATH . 'detalle_asignacion');

@@ -94,7 +94,7 @@
                                 <div class="btn-group" style="justify-content: flex-end;">
                                     <a href="<?php echo BASE_PATH; ?>instructor/ver?id=<?php echo $registro['inst_id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
                                     <a href="<?php echo BASE_PATH; ?>instructor/editar?id=<?php echo $registro['inst_id']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <button onclick="confirmarEliminacion(<?php echo $registro['inst_id']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button onclick="confirmarInstructorEliminacion(<?php echo $registro['inst_id']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -122,7 +122,7 @@
         }
     });
     
-    function confirmarEliminacion(id) {
+    function confirmarInstructorEliminacion(id) {
         if (confirm('¿Está seguro de eliminar este instructor?')) {
             window.location.href = `<?php echo BASE_PATH; ?>instructor/eliminar?id=${id}`;
         }

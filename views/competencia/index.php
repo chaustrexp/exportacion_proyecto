@@ -134,7 +134,7 @@
                                 <div class="btn-group" style="justify-content: flex-end;">
                                     <a href="<?php echo BASE_PATH; ?>competencia/ver/<?php echo htmlspecialchars($registro['comp_id'] ?? ''); ?>" class="btn btn-secondary btn-sm">Ver</a>
                                     <a href="<?php echo BASE_PATH; ?>competencia/editar/<?php echo htmlspecialchars($registro['comp_id'] ?? ''); ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <button onclick="confirmarEliminacion('<?php echo htmlspecialchars($registro['comp_id'] ?? ''); ?>', 'competencia')" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button onclick="confirmarModuloEliminacion('<?php echo htmlspecialchars($registro['comp_id'] ?? ''); ?>')" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -162,7 +162,7 @@
         }
     });
     
-    function confirmarEliminacion(id, tipo) {
+    function confirmarModuloEliminacion(id) {
         if (confirm(`¿Está seguro de eliminar esta ${tipo}?`)) {
             window.location.href = `<?php echo BASE_PATH; ?>competencia/eliminar/${id}`;
         }

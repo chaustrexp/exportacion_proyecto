@@ -149,7 +149,7 @@
                                 <div class="btn-group" style="justify-content: flex-end;">
                                     <a href="<?php echo BASE_PATH; ?>programa/show/<?php echo $registro['prog_codigo']; ?>" class="btn btn-secondary btn-sm">Ver</a>
                                     <a href="<?php echo BASE_PATH; ?>programa/edit/<?php echo $registro['prog_codigo']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <button onclick="confirmarEliminacion(<?php echo $registro['prog_codigo']; ?>, 'programa')" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button onclick="confirmarProgramaEliminacion(<?php echo $registro['prog_codigo']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -177,7 +177,7 @@
     });
     
     // Función para confirmar eliminación
-    function confirmarEliminacion(id, tipo) {
+    function confirmarProgramaEliminacion(id) {
         if (confirm(`¿Está seguro de eliminar este ${tipo}?`)) {
             window.location.href = `<?php echo BASE_PATH; ?>programa/delete/${id}`;
         }

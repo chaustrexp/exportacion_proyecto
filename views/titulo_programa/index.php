@@ -82,7 +82,7 @@
                                 <div class="btn-group" style="justify-content: flex-end;">
                                     <a href="<?php echo BASE_PATH; ?>titulo_programa/ver?id=<?php echo $registro['titpro_id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
                                     <a href="<?php echo BASE_PATH; ?>titulo_programa/editar?id=<?php echo $registro['titpro_id']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <button onclick="confirmarEliminacion(<?php echo $registro['titpro_id']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button onclick="confirmarTituloEliminacion(<?php echo $registro['titpro_id']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -110,7 +110,7 @@
         }
     });
     
-    function confirmarEliminacion(id) {
+    function confirmarTituloEliminacion(id) {
         if (confirm('¿Está seguro de eliminar este título?')) {
             window.location.href = `<?php echo BASE_PATH; ?>titulo_programa/eliminar?id=${id}`;
         }

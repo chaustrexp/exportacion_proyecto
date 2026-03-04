@@ -1,6 +1,6 @@
 <?php
 /**
- * Vista de Login - Rediseño Premium
+ * Vista de Login - Rediseño Premium v2
  * Se mantiene toda la lógica funcional de PHP y los atributos del formulario.
  */
 ?>
@@ -22,9 +22,9 @@
             --text-main: #1f2937;
             --text-muted: #6b7280;
             --bg-light: #F3F4F6;
+            --bg-input: #f8fafc;
             --border-color: #E5E7EB;
             --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         * {
@@ -35,209 +35,212 @@
 
         body {
             font-family: 'Public Sans', 'Inter', sans-serif;
-            background-color: var(--bg-light);
+            background-color: #ffffff;
             color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow-x: hidden;
         }
 
-        /* --- Estructura Principal --- */
         .login-wrapper {
             display: flex;
             width: 100%;
             height: 100vh;
-            background: #fff;
         }
 
         /* --- Lado del Formulario --- */
         .form-side {
-            flex: 1;
+            flex: 0 0 45%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px;
+            padding: 60px;
             background: #ffffff;
             position: relative;
-            z-index: 10;
         }
 
         .form-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 380px;
             animation: fadeIn 0.8s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .logo-header {
-            text-align: center;
-            margin-bottom: 48px;
+        /* Contenedor del Logo Estilo Mockup */
+        .logo-box {
+            width: 90px;
+            height: 90px;
+            background-color: #94a881; /* Color verde oliva del mockup */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            border-radius: 4px;
+            padding: 12px;
         }
 
-        .logo-header img {
-            width: 80px;
+        .logo-box img {
+            width: 100%;
             height: auto;
-            margin-bottom: 16px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            filter: brightness(0) invert(1);
         }
 
-        .brand-name {
-            font-family: 'Public Sans', sans-serif;
+        .brand-header {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .brand-name h1 {
-            font-size: 28px;
+        .brand-header h1 {
+            font-size: 32px;
             font-weight: 800;
-            color: var(--sena-blue);
-            letter-spacing: -1px;
+            color: #111827;
+            letter-spacing: -0.5px;
             margin-bottom: 4px;
         }
 
-        .brand-name span {
+        .brand-header span {
             font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        /* --- Estilos del Formulario --- */
-        .login-title {
-            margin-bottom: 32px;
-            text-align: center;
-        }
-
-        .login-title h2 {
-            font-size: 24px;
             font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
         }
 
-        .login-title p {
+        .login-intro {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-intro h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .login-intro p {
             font-size: 14px;
-            color: var(--text-muted);
+            color: #64748b;
+            line-height: 1.5;
         }
 
+        /* --- Estilos de Inputs --- */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 8px;
+        }
+
+        .form-group label i {
+            width: 14px;
+            height: 14px;
         }
 
         .input-wrapper {
             position: relative;
-            transition: all 0.3s;
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            color: #9ca3af;
-            transition: color 0.3s;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 16px 12px 44px;
-            background: #fff;
-            border: 2px solid #f3f4f6;
-            border-radius: 12px;
-            font-size: 15px;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            font-size: 14px;
             font-family: inherit;
-            color: var(--text-main);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #1e293b;
+            transition: all 0.2s ease;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--sena-green);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(57, 169, 0, 0.1);
+            border-color: #cbd5e1;
+            background: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .form-control:focus + i {
-            color: var(--sena-green);
+        .form-control::placeholder {
+            color: #94a3b8;
         }
 
         select.form-control {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 16px;
+            background-position: right 16px center;
+            background-size: 14px;
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--sena-green);
+            text-decoration: none;
+            margin-bottom: 24px;
+            transition: color 0.2s;
+        }
+
+        .forgot-password:hover {
+            color: var(--sena-green-dark);
         }
 
         .submit-btn {
             width: 100%;
             padding: 14px;
-            background: var(--sena-green);
+            background: #39A900;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 8px;
-            box-shadow: 0 4px 12px rgba(57, 169, 0, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            box-shadow: 0 4px 14px rgba(57, 169, 0, 0.4);
         }
 
         .submit-btn:hover {
-            background: var(--sena-green-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(57, 169, 0, 0.3);
+            background: #2d8500;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(57, 169, 0, 0.5);
         }
 
-        .submit-btn:active {
-            transform: translateY(0);
+        .submit-btn i {
+            width: 18px;
+            height: 18px;
         }
 
         /* --- Alertas --- */
         .alert {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 16px;
-            border-radius: 12px;
+            gap: 10px;
+            padding: 14px;
+            border-radius: 8px;
             margin-bottom: 24px;
-            font-size: 14px;
-            line-height: 1.4;
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        .alert-danger {
-            background-color: #fef2f2;
-            border: 1px solid #fee2e2;
-            color: #991b1b;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
+            font-size: 13.5px;
+            background-color: #fff1f2;
+            border: 1px solid #ffe4e6;
+            color: #e11d48;
         }
 
         /* --- Lado de la Imagen --- */
@@ -247,225 +250,218 @@
             background-image: url('<?php echo BASE_PATH; ?>assets/images/ImagenFachada111124SENA.jpg');
             background-size: cover;
             background-position: center;
-            display: block;
         }
 
         .image-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(0, 50, 77, 0.85) 0%, rgba(57, 169, 0, 0.6) 100%);
+            background: linear-gradient(135deg, rgba(2, 44, 34, 0.9) 0%, rgba(34, 133, 49, 0.8) 100%);
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
             padding: 80px;
         }
 
-        .overlay-text {
-            max-width: 500px;
+        .overlay-content {
+            max-width: 580px;
             color: white;
         }
 
-        .overlay-text h2 {
-            font-size: 48px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -2px;
-        }
-
-        .overlay-text p {
-            font-size: 17px;
-            line-height: 1.6;
-            opacity: 0.9;
-            font-weight: 400;
-            max-width: 480px;
-        }
-
-        /* Badge Superior */
         .overlay-badge {
             display: inline-block;
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 30px;
-            padding: 6px 18px;
-            margin-bottom: 28px;
-            color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 6px 16px;
+            margin-bottom: 32px;
         }
 
-        /* Línea Decorativa */
+        .overlay-content h2 {
+            font-size: 58px;
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+
         .overlay-divider {
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, #39A900, #6fcf00);
-            border-radius: 3px;
-            margin: 24px 0;
+            width: 80px;
+            height: 4px;
+            background: #ffffff;
+            margin-bottom: 32px;
         }
 
-        /* Estadísticas */
-        .overlay-stats {
+        .overlay-content p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 48px;
+        }
+
+        /* Estadísticas Inferiores */
+        .overlay-footer {
+            margin-top: auto;
             display: flex;
-            gap: 40px;
-            margin-top: 40px;
-            padding-top: 32px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .overlay-stat {
+        .stat-item {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
 
-        .stat-val {
-            font-size: 22px;
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 28px;
             font-weight: 800;
-            color: white;
-            letter-spacing: -0.5px;
+            color: #ffffff;
         }
 
-        .stat-lbl {
+        .stat-header i {
+            width: 20px;
+            height: 20px;
+            color: #4ade80;
+        }
+
+        .stat-label {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
         }
-
 
         /* --- Footer --- */
         .login-footer {
-            margin-top: auto;
-            padding-top: 40px;
+            margin-top: 48px;
             text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
+            font-size: 11px;
+            color: #94a3b8;
+            line-height: 1.6;
         }
 
         /* --- Responsive --- */
-        @media (max-width: 1024px) {
-            .image-side { display: none; }
-            .form-side { padding: 20px; }
-            .form-container { max-width: 400px; }
-            .overlay-text h2 { font-size: 36px; }
+        @media (max-width: 1100px) {
+            .form-side { flex: 0 0 50%; padding: 40px; }
+            .overlay-content h2 { font-size: 42px; }
         }
 
-        @media (max-width: 480px) {
-            .brand-name h1 { font-size: 24px; }
-            .login-title h2 { font-size: 20px; }
-            .form-control { padding: 10px 14px 10px 40px; }
+        @media (max-width: 900px) {
+            .image-side { display: none; }
+            .form-side { flex: 1; height: 100vh; }
         }
     </style>
 </head>
 <body>
     <div class="login-wrapper">
-        <!-- Formulario Seccion -->
+        <!-- Lado del Formulario -->
         <main class="form-side">
             <div class="form-container">
-                <!-- Logo y Brand -->
-                <div class="logo-header">
+                <!-- Logo Estilo Mockup -->
+                <div class="logo-box">
                     <img src="<?php echo BASE_PATH; ?>assets/images/sena-logo.png" alt="SENA Logo">
-                    <div class="brand-name">
-                        <h1>ProgSENA</h1>
-                        <span>Gestión Académica de Exportación</span>
-                    </div>
                 </div>
 
-                <!-- Formulario de Inicio de Sesión -->
-                <div class="login-box">
-                    <div class="login-title">
-                        <h2>¡Bienvenido de nuevo!</h2>
-                        <p>Por favor, ingresa tus credenciales institucional.</p>
+                <!-- Marca -->
+                <div class="brand-header">
+                    <h1>ProgSENA</h1>
+                    <span>Gestión Académica de Exportación</span>
+                </div>
+
+                <!-- Bienvenida -->
+                <div class="login-intro">
+                    <h2>¡Bienvenido de nuevo!</h2>
+                    <p>Ingresa tus credenciales institucionales para continuar.</p>
+                </div>
+
+                <!-- Alertas -->
+                <?php if (isset($error) && !empty($error)): ?>
+                    <div class="alert">
+                        <i data-lucide="alert-circle"></i>
+                        <span><?php echo htmlspecialchars($error); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Formulario -->
+                <form action="<?php echo BASE_PATH; ?>auth/login" method="POST">
+                    <div class="form-group">
+                        <label for="rol">
+                            <i data-lucide="user-check"></i>
+                            Perfil de Acceso
+                        </label>
+                        <select id="rol" name="rol" class="form-control" required>
+                            <option value="" disabled selected>Seleccione su rol...</option>
+                            <option value="Instructor">Instructor</option>
+                            <option value="Coordinador">Coordinador</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
                     </div>
 
-                    <!-- Mensajes de Error -->
-                    <?php if (isset($error) && !empty($error)): ?>
-                        <div class="alert alert-danger" role="alert">
-                            <i data-lucide="alert-circle"></i>
-                            <span><?php echo htmlspecialchars($error); ?></span>
-                        </div>
-                    <?php endif; ?>
+                    <div class="form-group">
+                        <label for="email">
+                            <i data-lucide="mail"></i>
+                            Correo Institucional
+                        </label>
+                        <input type="email" id="email" name="email" class="form-control" 
+                               placeholder="usuario@sena.edu.co" required autofocus>
+                    </div>
 
-                    <form action="<?php echo BASE_PATH; ?>auth/login" method="POST">
-                        <div class="form-group">
-                            <label for="rol">Perfil de Acceso</label>
-                            <div class="input-wrapper">
-                                <i data-lucide="users"></i>
-                                <select id="rol" name="rol" class="form-control" required>
-                                    <option value="" disabled selected>Seleccione su rol...</option>
-                                    <option value="Instructor">Instructor</option>
-                                    <option value="Coordinador">Coordinador</option>
-                                    <option value="Administrador">Administrador</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="password">
+                            <i data-lucide="lock"></i>
+                            Contraseña
+                        </label>
+                        <input type="password" id="password" name="password" class="form-control" 
+                               placeholder="••••••••" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="email">Correo Institucional</label>
-                            <div class="input-wrapper">
-                                <i data-lucide="mail"></i>
-                                <input type="email" id="email" name="email" class="form-control" 
-                                       placeholder="usuario@sena.edu.co" required autofocus>
-                            </div>
-                        </div>
+                    <a href="#" class="forgot-password">¿Olvidó su contraseña?</a>
 
-                        <div class="form-group">
-                            <label for="password">Contraseña</label>
-                            <div class="input-wrapper">
-                                <i data-lucide="lock"></i>
-                                <input type="password" id="password" name="password" class="form-control" 
-                                       placeholder="••••••••" required>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="submit-btn" id="loginBtn">
-                            <span>Entrar al Sistema</span>
-                            <i data-lucide="chevron-right"></i>
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" class="submit-btn" id="loginBtn">
+                        Entrar al Sistema
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </form>
 
                 <footer class="login-footer">
-                    <p>© <?php echo date('Y'); ?> Servicio Nacional de Aprendizaje SENA</p>
-                    <p>Todos los derechos reservados.</p>
+                    <p>© <?php echo date('Y'); ?> SERVICIO NACIONAL DE APRENDIZAJE SENA<br>TODOS LOS DERECHOS RESERVADOS.</p>
                 </footer>
             </div>
         </main>
 
-        <!-- Imagen y Texto Seccion -->
+        <!-- Lado de la Imagen -->
         <section class="image-side">
             <div class="image-overlay">
-                <div class="overlay-text">
-                    <!-- Badge -->
+                <div class="overlay-content">
                     <div class="overlay-badge">Ecosistema Digital de Aprendizaje</div>
-
-                    <!-- Título Principal -->
                     <h2>Bienvenido a la<br>Excelencia Académica</h2>
-
-                    <!-- Línea Decorativa -->
                     <div class="overlay-divider"></div>
-
-                    <!-- Descripción -->
                     <p>Optimice la gestión de sus procesos educativos con nuestra plataforma integral diseñada exclusivamente para la comunidad.</p>
+                </div>
 
-                    <!-- Estadísticas -->
-                    <div class="overlay-stats">
-                        <div class="overlay-stat">
-                            <span class="stat-val">100%</span>
-                            <span class="stat-lbl">Digital</span>
+                <div class="overlay-footer">
+                    <div class="stat-item">
+                        <div class="stat-header">100%</div>
+                        <div class="stat-label">Digital</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-header">24/7</div>
+                        <div class="stat-label">Soporte</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-header">
+                            <i data-lucide="shield-check"></i>
                         </div>
-                        <div class="overlay-stat">
-                            <span class="stat-val">24/7</span>
-                            <span class="stat-lbl">Soporte</span>
-                        </div>
-                        <div class="overlay-stat">
-                            <span class="stat-val">Secure</span>
-                            <span class="stat-lbl">Encrypted</span>
-                        </div>
+                        <div class="stat-label">Seguro y Encriptado</div>
                     </div>
                 </div>
             </div>
@@ -476,14 +472,19 @@
         // Inicializar iconos de Lucide
         lucide.createIcons();
 
-        // Pequeño feedback visual al enviar el formulario
+        // Feedback al enviar
         document.querySelector('form').addEventListener('submit', function() {
             const btn = document.getElementById('loginBtn');
-            btn.innerHTML = '<span>Verificando...</span> <i data-lucide="loader-2" class="animate-spin"></i>';
+            btn.innerHTML = 'Verificando... <i data-lucide="loader-2" style="animation: spin 1s linear infinite;"></i>';
             lucide.createIcons();
             btn.style.opacity = '0.8';
             btn.style.pointerEvents = 'none';
         });
+
+        // Definir animación de spin si no existe en CSS
+        const style = document.createElement('style');
+        style.innerHTML = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

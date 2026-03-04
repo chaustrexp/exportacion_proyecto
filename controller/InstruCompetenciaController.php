@@ -34,7 +34,7 @@ class InstruCompetenciaController extends BaseController {
         $registros = $this->model->getAll();
         
         // Obtener asociaciones válidas de COMPETxPROGRAMA
-        require_once __DIR__ . '/../conexion.php';
+        require_once __DIR__ . '/../config/conexion.php';
         $db = Database::getInstance()->getConnection();
         $stmt = $db->query("
             SELECT cp.programa_prog_id as prog_id,
@@ -81,7 +81,7 @@ class InstruCompetenciaController extends BaseController {
         }
         
         // Obtener asociaciones válidas de COMPETxPROGRAMA
-        require_once __DIR__ . '/../conexion.php';
+        require_once __DIR__ . '/../config/conexion.php';
         $db = Database::getInstance()->getConnection();
         $stmt = $db->query("
             SELECT cp.programa_prog_id as prog_id,
@@ -133,7 +133,7 @@ class InstruCompetenciaController extends BaseController {
         
         try {
             // Verificar que la combinación programa+competencia existe en COMPETxPROGRAMA
-            require_once __DIR__ . '/../conexion.php';
+            require_once __DIR__ . '/../config/conexion.php';
             $db = Database::getInstance()->getConnection();
             $stmt = $db->prepare("
                 SELECT COUNT(*) as existe 
@@ -214,7 +214,7 @@ class InstruCompetenciaController extends BaseController {
         }
         
         // Obtener asociaciones válidas de COMPETxPROGRAMA
-        require_once __DIR__ . '/../conexion.php';
+        require_once __DIR__ . '/../config/conexion.php';
         $db = Database::getInstance()->getConnection();
         $stmt = $db->query("
             SELECT cp.programa_prog_id as prog_id,
@@ -258,7 +258,7 @@ class InstruCompetenciaController extends BaseController {
         
         try {
             // Verificar que la combinación programa+competencia existe en COMPETxPROGRAMA
-            require_once __DIR__ . '/../conexion.php';
+            require_once __DIR__ . '/../config/conexion.php';
             $db = Database::getInstance()->getConnection();
             $stmt = $db->prepare("
                 SELECT COUNT(*) as existe 

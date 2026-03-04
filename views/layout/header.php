@@ -51,79 +51,6 @@ $version = time(); // Cambia en cada recarga
 // Título del documento
 $documentTitle = $pageTitle . ' - Dashboard SENA';
 
-/**
- * Realiza la búsqueda global en la base de datos.
- * Se llama internamente desde el header para resultados sin JS.
- */
-if (!function_exists('getSearchResults')) {
-    function getSearchResults(string $query): array {
-        if (mb_strlen(trim($query)) < 2) return [];
-
-        require_once __DIR__ . '/../../conexion.php';
-        $db      = Database::getInstance()->getConnection();
-        $term    = '%' . trim($query) . '%';
-        $results = [];
-
-        try {
-            // Instructores
-            $stmt = $db->prepare("
-                SELECT IdInstructor AS id,
-                       CONCAT(Nombre,' ',Apellido) AS title,
-                       Especialidad AS subtitle
-                FROM instructor
-                WHERE CONCAT(Nombre,' ',Apellido) LIKE :t OR Especialidad LIKE :t2 OR Documento LIKE :t3
-                LIMIT 4
-            ");
-            $stmt->execute([':t' => $term, ':t2' => $term, ':t3' => $term]);
-            foreach ($stmt->fetchAll() as $r) {
-                $results[] = ['title' => $r['title'], 'subtitle' => 'Instructor - '.($r['subtitle'] ?: '—'),
-                    'url' => BASE_PATH.'instructor/ver/'.$r['id'], 'icon' => 'user'];
-            }
-
-            // Fichas
-            $stmt = $db->prepare("
-                SELECT f.IdFicha AS id, f.NumeroFicha AS numero, p.NombrePrograma AS prog
-                FROM ficha f LEFT JOIN programa p ON f.IdPrograma=p.IdPrograma
-                WHERE f.NumeroFicha LIKE :t OR p.NombrePrograma LIKE :t2
-                LIMIT 4
-            ");
-            $stmt->execute([':t' => $term, ':t2' => $term]);
-            foreach ($stmt->fetchAll() as $r) {
-                $results[] = ['title' => 'Ficha '.$r['numero'], 'subtitle' => $r['prog'] ?: '—',
-                    'url' => BASE_PATH.'ficha/show/'.$r['id'], 'icon' => 'file-text'];
-            }
-
-            // Programas
-            $stmt = $db->prepare("
-                SELECT IdPrograma AS id, NombrePrograma AS title, CodigoPrograma AS codigo
-                FROM programa WHERE NombrePrograma LIKE :t OR CodigoPrograma LIKE :t2
-                LIMIT 4
-            ");
-            $stmt->execute([':t' => $term, ':t2' => $term]);
-            foreach ($stmt->fetchAll() as $r) {
-                $results[] = ['title' => $r['title'], 'subtitle' => 'Código: '.($r['codigo'] ?: '—'),
-                    'url' => BASE_PATH.'programa/show/'.$r['id'], 'icon' => 'book-open'];
-            }
-
-            // Ambientes
-            $stmt = $db->prepare("
-                SELECT IdAmbiente AS id, NombreAmbiente AS title, TipoAmbiente AS tipo
-                FROM ambiente WHERE NombreAmbiente LIKE :t OR TipoAmbiente LIKE :t2
-                LIMIT 4
-            ");
-            $stmt->execute([':t' => $term, ':t2' => $term]);
-            foreach ($stmt->fetchAll() as $r) {
-                $results[] = ['title' => $r['title'], 'subtitle' => 'Ambiente - '.($r['tipo'] ?: '—'),
-                    'url' => BASE_PATH.'ambiente/ver/'.$r['id'], 'icon' => 'map-pin'];
-            }
-
-        } catch (PDOException $e) {
-            error_log('Header search error: ' . $e->getMessage());
-        }
-
-        return array_slice($results, 0, 15);
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -142,120 +69,61 @@ if (!function_exists('getSearchResults')) {
     <link rel="apple-touch-icon" href="<?php echo BASE_PATH; ?>assets/images/favicon.svg">
     
     <link rel="stylesheet" href="<?php echo BASE_PATH; ?>assets/css/styles.css?v=<?php echo $version; ?>">
-    
-    <!-- Tema Mejorado Encapsulado -->
     <link rel="stylesheet" href="<?php echo BASE_PATH; ?>assets/css/theme-enhanced.css?v=<?php echo $version; ?>">
     
     <script>
         window.BASE_PATH = '<?php echo BASE_PATH; ?>';
     </script>
 </head>
-<body class="sena-enhanced-theme">
+<?php 
+// Determinar clase de rol para el body
+$bodyRoleClass = 'role-instr'; // Default
+if ($userRole === 'Administrador') $bodyRoleClass = 'role-admin';
+if ($userRole === 'Coordinador') $bodyRoleClass = 'role-coord';
+?>
+<body class="sena-enhanced-theme <?php echo $bodyRoleClass; ?>">
     <!-- Navbar Moderno -->
     <nav class="navbar">
-        <!-- Título del Dashboard -->
-        <div class="navbar-title">
-            <h1><?php echo htmlspecialchars($pageTitle); ?></h1>
-        </div>
-        
-        <!-- Barra de Búsqueda (PHP puro, sin JavaScript) -->
-        <div class="navbar-search" style="position: relative;">
-            <form method="GET" action="" style="display:flex;align-items:center;gap:0;width:100%;">
-                <i data-lucide="search" style="width:18px;height:18px;color:#6b7280;flex-shrink:0;margin-right:8px;"></i>
-                <input type="text" name="q" placeholder="Buscar y presiona Enter..." class="search-input"
-                       value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>"
-                       autocomplete="off">
-                <button type="submit" class="search-btn" title="Buscar">
-                    <i data-lucide="corner-down-left"></i>
-                </button>
-            </form>
-            <?php
-            // Mostrar resultados de búsqueda si hay query
-            $searchQuery = isset($_GET['q']) ? trim($_GET['q']) : '';
-            if (strlen($searchQuery) >= 2):
-                // Llamar directamente a la lógica de búsqueda
-                $searchResults = getSearchResults($searchQuery);
-                if (!empty($searchResults)):
-            ?>
-            <div class="search-results" id="searchResults" style="display:block;">
-                <?php foreach ($searchResults as $item): ?>
-                <a href="<?php echo htmlspecialchars($item['url']); ?>" class="search-result-item">
-                    <i data-lucide="<?php echo htmlspecialchars($item['icon']); ?>"></i>
-                    <div>
-                        <span class="result-title"><?php echo htmlspecialchars($item['title']); ?></span>
-                        <span class="result-subtitle"><?php echo htmlspecialchars($item['subtitle']); ?></span>
-                    </div>
-                </a>
-                <?php endforeach; ?>
+        <!-- Logo y Título -->
+        <div class="navbar-logo">
+            <div class="navbar-logo-icon">
+                <i data-lucide="graduation-cap"></i>
             </div>
-            <?php
-                elseif (!empty($searchQuery)):
-            ?>
-            <div class="search-results" id="searchResults" style="display:block;">
-                <div class="search-result-item" style="cursor:default;">
-                    <i data-lucide="search-x"></i>
-                    <div><span class="result-title">Sin resultados para "<?php echo htmlspecialchars($searchQuery); ?>"</span></div>
-                </div>
+            <div class="navbar-logo-text">
+                <h2><?php echo htmlspecialchars($pageTitle); ?></h2>
             </div>
-            <?php
-                endif;
-            endif;
-            ?>
         </div>
         
         <!-- Acciones del Header -->
         <div class="navbar-actions">
-            <?php if (($_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '') !== 'Instructor'): ?>
+            <?php if ($userRole === 'Administrador' || $userRole === 'Coordinador'): ?>
                 <!-- Botón Agregar -->
                 <div style="position: relative;">
                     <button class="navbar-btn" id="addBtn" title="Agregar nuevo">
                         <i data-lucide="plus"></i>
                     </button>
                     
-                    <!-- Dropdown Agregar -->
+                    <!-- Dropdown Agregar (Personalizado por Rol) -->
                     <div class="add-dropdown" id="addDropdown">
-                        <a href="<?php echo BASE_PATH; ?>asignacion/create" class="add-dropdown-item">
-                            <i data-lucide="calendar"></i>
-                            Nueva Asignación
-                        </a>
-                        <a href="<?php echo BASE_PATH; ?>instructor/create" class="add-dropdown-item">
-                            <i data-lucide="user-plus"></i>
-                            Nuevo Instructor
-                        </a>
-                        <a href="<?php echo BASE_PATH; ?>ficha/create" class="add-dropdown-item">
-                            <i data-lucide="file-plus"></i>
-                            Nueva Ficha
-                        </a>
-                        <a href="<?php echo BASE_PATH; ?>programa/create" class="add-dropdown-item">
-                            <i data-lucide="book-open"></i>
-                            Nuevo Programa
-                        </a>
-                        <a href="<?php echo BASE_PATH; ?>ambiente/create" class="add-dropdown-item">
-                            <i data-lucide="map-pin"></i>
-                            Nuevo Ambiente
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Notificaciones -->
-                <div style="position: relative;">
-                    <button class="navbar-btn navbar-notifications" id="notificationsBtn" title="Notificaciones">
-                        <i data-lucide="bell"></i>
-                        <span class="notification-badge" id="notificationBadge">3</span>
-                    </button>
-                    
-                    <!-- Dropdown Notificaciones -->
-                    <div class="notifications-dropdown" id="notificationsDropdown">
-                        <div class="notifications-header">
-                            <h3>Notificaciones</h3>
-                            <a href="#" class="mark-all-read" id="markAllRead">Marcar todas como leídas</a>
-                        </div>
-                        <div class="notifications-list" id="notificationsList">
-                            <!-- Las notificaciones se cargarán aquí dinámicamente -->
-                        </div>
-                        <div class="notifications-footer">
-                            <a href="#" class="view-all-notifications">Ver todas las notificaciones</a>
-                        </div>
+                        <?php if ($userRole === 'Coordinador'): ?>
+                            <a href="<?php echo BASE_PATH; ?>asignacion/create" class="add-dropdown-item">
+                                <i data-lucide="calendar"></i>
+                                Nueva Asignación
+                            </a>
+                            <a href="<?php echo BASE_PATH; ?>ficha/create" class="add-dropdown-item">
+                                <i data-lucide="file-plus"></i>
+                                Nueva Ficha
+                            </a>
+                        <?php elseif ($userRole === 'Administrador'): ?>
+                            <a href="<?php echo BASE_PATH; ?>instructor/create" class="add-dropdown-item">
+                                <i data-lucide="user-plus"></i>
+                                Nuevo Instructor
+                            </a>
+                            <a href="<?php echo BASE_PATH; ?>ficha/create" class="add-dropdown-item">
+                                <i data-lucide="file-plus"></i>
+                                Nueva Ficha
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -264,9 +132,39 @@ if (!function_exists('getSearchResults')) {
             <button class="navbar-btn" id="helpBtn" title="Ayuda">
                 <i data-lucide="help-circle"></i>
             </button>
+            
+            <!-- Cerrar Sesión -->
+            <a href="<?php echo BASE_PATH; ?>auth/logout" class="navbar-btn" title="Cerrar Sesión" style="color: #ef4444; border-color: #fee2e2;">
+                <i data-lucide="log-out"></i>
+            </a>
         </div>
-        
+
+        <!-- Perfil de Usuario -->
+        <div class="navbar-profile">
+            <div class="user-text">
+                <span class="user-name"><?php echo $_SESSION['usuario_nombre']; ?></span>
+            </div>
+            <div class="user-avatar-nav">
+                <img src="<?php echo BASE_PATH; ?>assets/images/foto-perfil.jpg" alt="Perfil">
+            </div>
+        </div>
     </nav>
+
+    <!-- Barra de Breadcrumb y Fecha -->
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-list">
+            <span class="breadcrumb-item">
+                <i data-lucide="home"></i>
+                <span>HOME</span>
+            </span>
+            <span class="breadcrumb-separator">></span>
+            <span class="breadcrumb-active"><?php echo strtoupper(htmlspecialchars($pageTitle)); ?></span>
+        </div>
+        <div class="date-display">
+            <i data-lucide="calendar"></i>
+            <span><?php echo strtoupper(date('M d, Y')); ?></span>
+        </div>
+    </div>
 
     <!-- Modal de Ayuda -->
     <div class="help-modal" id="helpModal">
@@ -281,9 +179,7 @@ if (!function_exists('getSearchResults')) {
                 <div class="help-section">
                     <h3><i data-lucide="book"></i> Documentación</h3>
                     <ul>
-                        <li><a href="<?php echo BASE_PATH; ?>_docs/INSTRUCCIONES_USUARIO.md" target="_blank">Manual de Usuario</a></li>
-                        <li><a href="<?php echo BASE_PATH; ?>_docs/ARQUITECTURA_DASHBOARD.md" target="_blank">Arquitectura del Sistema</a></li>
-                        <li><a href="<?php echo BASE_PATH; ?>_docs/SISTEMA_ROUTING.md" target="_blank">Sistema de Routing</a></li>
+                        <li><a href="#">Manual de Usuario (Soporte)</a></li>
                     </ul>
                 </div>
                 

@@ -10,8 +10,8 @@ $rol = $_SESSION['usuario_rol'] ?? $_SESSION['rol'] ?? 'Instructor';
         <div style="position: relative; z-index: 2;">
             <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">PRÓXIMA CLASE</div>
             <?php if (isset($proximaClase) && $proximaClase): ?>
-                <h3 style="font-size: 36px; font-weight: 800; margin: 0 0 8px; line-height: 1.1; letter-spacing: -1px;"><?php echo htmlspecialchars($proximaClase['ficha_nombre']); ?></h3>
-                <p style="font-size: 16px; color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 0;">Ficha: <?php echo htmlspecialchars($proximaClase['ficha_codigo']); ?></p>
+                <h3 style="font-size: 32px; font-weight: 800; margin: 0 0 8px; line-height: 1.1; letter-spacing: -1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?php echo htmlspecialchars($proximaClase['programa_nombre'] ?? 'Programa no especificado'); ?>"><?php echo htmlspecialchars($proximaClase['programa_nombre'] ?? 'Programa no especificado'); ?></h3>
+                <p style="font-size: 16px; color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 0;">Ficha: <?php echo htmlspecialchars($proximaClase['ficha_numero'] ?? 'N/A'); ?> | Ambiente: <?php echo htmlspecialchars($proximaClase['ambiente_nombre'] ?? 'N/A'); ?></p>
             <?php else: ?>
                 <h3 style="font-size: 36px; font-weight: 800; margin: 0 0 8px; line-height: 1.1; letter-spacing: -1px;">Sin clases próximas</h3>
                 <p style="font-size: 16px; color: rgba(255, 255, 255, 0.7); font-weight: 500; margin: 0;">Disfruta de tu tiempo libre</p>
@@ -19,7 +19,7 @@ $rol = $_SESSION['usuario_rol'] ?? $_SESSION['rol'] ?? 'Instructor';
         </div>
         
         <div style="margin-top: 32px; position: relative; z-index: 2;">
-            <a href="<?php echo BASE_PATH; ?>instructor_dashboard/misAsignaciones" style="display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.2s;" onmouseover="this.style.background='white'; this.style.color='#2d7a1e';" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.color='white';">
+            <a href="<?php echo BASE_PATH; ?>instructor_dashboard/misAsignaciones?view_instructor_id=<?php echo isset($view_instructor_id) ? $view_instructor_id : $_SESSION['instructor_id']; ?>" style="display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.2s;" onmouseover="this.style.background='white'; this.style.color='#2d7a1e';" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.color='white';">
                 Ver Agenda Completa
             </a>
         </div>

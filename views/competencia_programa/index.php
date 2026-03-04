@@ -105,7 +105,7 @@
         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
             <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">Programas Vinculados</div>
             <div style="font-size: 32px; font-weight: 700; color: #3b82f6;">
-                <?php echo isset($registros) && !empty($registros) ? count(array_unique(array_column($registros, 'PROGRAMA_prog_id'))) : 0; ?>
+                <?php echo isset($registros) && !empty($registros) ? count(array_unique(array_column($registros, 'programa_prog_id'))) : 0; ?>
             </div>
         </div>
     </div>
@@ -137,13 +137,13 @@
                             <td style="padding: 16px;" data-filtro="competencia">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['comp_nombre_corto'] ?? ''); ?></div>
                                 <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
-                                    ID: <?php echo htmlspecialchars($registro['COMPETENCIA_comp_id'] ?? 'N/A'); ?>
+                                    ID: <?php echo htmlspecialchars($registro['competencia_comp_id'] ?? 'N/A'); ?>
                                 </div>
                             </td>
                             <td style="padding: 16px;" data-filtro="programa">
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo htmlspecialchars($registro['prog_denominacion'] ?? ''); ?></div>
                                 <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
-                                    Código: <?php echo htmlspecialchars($registro['PROGRAMA_prog_id'] ?? 'N/A'); ?>
+                                    Código: <?php echo htmlspecialchars($registro['programa_prog_id'] ?? 'N/A'); ?>
                                 </div>
                             </td>
                             <td style="padding: 16px;">
@@ -153,7 +153,7 @@
                             </td>
                             <td style="padding: 16px;">
                                 <div class="btn-group" style="justify-content: flex-end;">
-                                    <button onclick="confirmarEliminacion('<?php echo htmlspecialchars($registro['PROGRAMA_prog_id'] ?? ''); ?>', '<?php echo htmlspecialchars($registro['COMPETENCIA_comp_id'] ?? ''); ?>')" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button onclick="confirmarQuitarCompetencia('<?php echo htmlspecialchars($registro['programa_prog_id'] ?? ''); ?>', '<?php echo htmlspecialchars($registro['competencia_comp_id'] ?? ''); ?>')" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>
@@ -181,7 +181,7 @@
         }
     });
     
-    function confirmarEliminacion(programaId, competenciaId) {
+    function confirmarQuitarCompetencia(programaId, competenciaId) {
         if (confirm('¿Está seguro de eliminar esta relación?')) {
             window.location.href = `<?php echo BASE_PATH; ?>competencia_programa/eliminar?programa_id=${programaId}&competencia_id=${competenciaId}`;
         }

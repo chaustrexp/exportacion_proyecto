@@ -5,7 +5,7 @@
  */
 
 // Cargar configuración
-require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Obtener la ruta solicitada
 $request = $_SERVER['REQUEST_URI'];
@@ -21,7 +21,7 @@ $isAuthRoute = str_starts_with($route, 'auth/') || $route === 'auth';
 
 // Proteger con autenticación (excepto rutas de login)
 if (!$isAuthRoute) {
-    require_once __DIR__ . '/auth/check_auth.php';
+    require_once __DIR__ . '/../auth/check_auth.php';
 }
 
 // Si la ruta está vacía o es 'index.php', redirigir según el rol
@@ -111,7 +111,13 @@ $routes = [
     'ficha' => [
         'controller' => 'FichaController',
         'file' => 'controller/FichaController.php',
-        'actions' => ['index', 'create', 'store', 'show', 'edit', 'update', 'delete']
+        'actions' => ['index', 'create', 'store', 'show', 'edit', 'update', 'delete', 'eliminar'],
+        'action_map' => [
+            'eliminar' => 'delete',
+            'crear' => 'create',
+            'editar' => 'edit',
+            'ver' => 'show'
+        ]
     ],
     'instructor' => [
         'controller' => 'InstructorController',
@@ -138,7 +144,13 @@ $routes = [
     'programa' => [
         'controller' => 'ProgramaController',
         'file' => 'controller/ProgramaController.php',
-        'actions' => ['index', 'create', 'store', 'show', 'edit', 'update', 'delete']
+        'actions' => ['index', 'create', 'store', 'show', 'edit', 'update', 'delete', 'eliminar', 'crear', 'editar', 'ver'],
+        'action_map' => [
+            'eliminar' => 'delete',
+            'crear' => 'create',
+            'editar' => 'edit',
+            'ver' => 'show'
+        ]
     ],
     'competencia' => [
         'controller' => 'CompetenciaController',
@@ -264,7 +276,7 @@ if (!in_array($action, $routeConfig['actions'])) {
 }
 
 // Cargar el controlador
-$controllerFile = __DIR__ . '/' . $routeConfig['file'];
+$controllerFile = __DIR__ . '/../' . $routeConfig['file'];
 if (!file_exists($controllerFile)) {
     http_response_code(500);
     die("Archivo del controlador no encontrado: {$routeConfig['file']}");
@@ -302,8 +314,8 @@ try {
     
     // Mostrar página de error
     $pageTitle = "Error del Sistema";
-    include __DIR__ . '/views/layout/header.php';
-    include __DIR__ . '/views/layout/sidebar.php';
+    include __DIR__ . '/../views/layout/header.php';
+    include __DIR__ . '/../views/layout/sidebar.php';
     ?>
     <div class="main-content">
         <div style="max-width: 600px; margin: 100px auto; text-align: center;">
@@ -322,6 +334,6 @@ try {
         </div>
     </div>
     <?php
-    include __DIR__ . '/views/layout/footer.php';
+    include __DIR__ . '/../views/layout/footer.php';
 }
 ?>

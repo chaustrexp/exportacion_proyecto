@@ -24,7 +24,7 @@
                 <div><?php echo htmlspecialchars($registro['detasig_hora_fin'] ?? ''); ?></div>
             </div>
             <div class="btn-group" style="margin-top: 20px;">
-                <a href="<?php echo BASE_PATH; ?>detalle_asignacion/editar?id=<?php echo $registro['detasig_id']; ?>" class="btn btn-primary">Editar</a>
+                <a href="<?php echo BASE_PATH; ?>detalle_asignacion/editar/<?php echo $registro['detasig_id']; ?>" class="btn btn-primary">Editar</a>
                 <a href="<?php echo BASE_PATH; ?>detalle_asignacion" class="btn btn-secondary">Volver</a>
             </div>
         <?php else: ?>

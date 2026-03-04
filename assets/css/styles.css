@@ -1080,10 +1080,12 @@ li {
 /* ========== MAIN CONTENT MODERNO ========== */
 .main-content {
     margin-left: 260px;
-    margin-top: 50px;
-    padding: 24px 32px;
-    min-height: calc(100vh - 50px);
-    position: relative;
+    margin-top: 118px;
+    /* 70px header + 48px breadcrumb */
+    padding: 0 32px 32px;
+    /* Sin padding arriba para evitar duplicidad */
+    min-height: calc(100vh - 118px);
+    transition: all 0.3s ease;
     z-index: 1;
     background: transparent;
 }

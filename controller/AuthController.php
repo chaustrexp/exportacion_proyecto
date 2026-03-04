@@ -59,7 +59,7 @@ class AuthController extends BaseController {
         }
 
         try {
-            require_once __DIR__ . '/../conexion.php';
+            require_once __DIR__ . '/../config/conexion.php';
             $db = Database::getInstance()->getConnection();
             
             $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = ? AND estado = 'Activo'");

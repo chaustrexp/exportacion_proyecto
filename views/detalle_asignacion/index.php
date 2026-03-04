@@ -10,7 +10,7 @@
             <h1 style="font-size: 28px; font-weight: 700; color: #1f2937; margin: 0 0 4px;">Detalle de Asignaciones</h1>
             <p style="font-size: 14px; color: #6b7280; margin: 0;">Gestiona los detalles específicos de cada asignación</p>
         </div>
-        <a href="crear.php" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <a href="<?php echo BASE_PATH; ?>detalle_asignacion/crear" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
             <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
             Nuevo Detalle
         </a>
@@ -39,7 +39,8 @@
                 <?php 
                 $hoy = date('Y-m-d');
                 $hoyCount = array_filter($registros, function($r) use ($hoy) {
-                    return $r['fecha'] == $hoy;
+                    $fecha_r = isset($r['detasig_hora_ini']) ? date('Y-m-d', strtotime($r['detasig_hora_ini'])) : '';
+                    return $fecha_r == $hoy;
                 });
                 echo count($hoyCount);
                 ?>
@@ -80,23 +81,23 @@
                                 <div style="font-weight: 600; color: #1f2937;"><?php echo $registro['instructor_nombre']; ?></div>
                             </td>
                             <td style="padding: 16px; color: #6b7280;">
-                                <?php echo date('d/m/Y', strtotime($registro['fecha'])); ?>
+                                <?php echo isset($registro['detasig_hora_ini']) ? date('d/m/Y', strtotime($registro['detasig_hora_ini'])) : 'N/A'; ?>
                             </td>
                             <td style="padding: 16px;">
                                 <span style="background: #EFF6FF; color: #3b82f6; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                                    <?php echo $registro['hora_inicio']; ?>
+                                    <?php echo isset($registro['detasig_hora_ini']) ? date('H:i', strtotime($registro['detasig_hora_ini'])) : 'N/A'; ?>
                                 </span>
                             </td>
                             <td style="padding: 16px;">
                                 <span style="background: #FCE7F3; color: #ec4899; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                                    <?php echo $registro['hora_fin']; ?>
+                                    <?php echo isset($registro['detasig_hora_fin']) ? date('H:i', strtotime($registro['detasig_hora_fin'])) : 'N/A'; ?>
                                 </span>
                             </td>
                             <td style="padding: 16px;">
                                 <div class="btn-group" style="justify-content: flex-end;">
-                                    <a href="ver.php?id=<?php echo $registro['id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
-                                    <a href="editar.php?id=<?php echo $registro['id']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                                    <button onclick="confirmarEliminacion(<?php echo $registro['id']; ?>, 'detalle_asignacion')" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <a href="<?php echo BASE_PATH; ?>detalle_asignacion/ver/<?php echo $registro['detasig_id']; ?>" class="btn btn-secondary btn-sm">Ver</a>
+                                    <a href="<?php echo BASE_PATH; ?>detalle_asignacion/editar/<?php echo $registro['detasig_id']; ?>" class="btn btn-primary btn-sm">Editar</a>
+                                    <button onclick="confirmarEliminacion(<?php echo $registro['detasig_id']; ?>, 'detalle_asignacion')" class="btn btn-danger btn-sm">Eliminar</button>
                                 </div>
                             </td>
                         </tr>

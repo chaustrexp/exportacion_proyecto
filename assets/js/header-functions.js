@@ -162,7 +162,7 @@ function loadNotifications() {
     notificationsList.innerHTML = '<div style="padding: 20px; text-align: center; color: #6b7280;">Cargando...</div>';
 
     // Cargar notificaciones desde el servidor
-    fetch('${window.BASE_PATH}api/notifications.php')
+    fetch(`${window.BASE_PATH}api/notifications.php`)
         .then(response => response.json())
         .then(data => {
             displayNotifications(data);
@@ -264,7 +264,7 @@ function updateNotificationBadge(count) {
 
 function markNotificationAsRead(notificationId) {
     // Enviar petición al servidor para marcar como leída
-    fetch('${window.BASE_PATH}api/notifications.php', {
+    fetch(`${window.BASE_PATH}api/notifications.php`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -285,7 +285,7 @@ function markNotificationAsRead(notificationId) {
 
 function markAllNotificationsAsRead() {
     // Marcar todas como leídas
-    fetch('${window.BASE_PATH}api/notifications.php', {
+    fetch(`${window.BASE_PATH}api/notifications.php`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

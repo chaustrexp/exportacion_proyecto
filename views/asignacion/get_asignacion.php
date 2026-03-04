@@ -1,7 +1,7 @@
 <?php
 // No requerir autenticación para AJAX
 // require_once __DIR__ . '/../../auth/check_auth.php';
-require_once __DIR__ . '/../../conexion.php';
+require_once __DIR__ . '/../../config/conexion.php';
 require_once __DIR__ . '/../../model/AsignacionModel.php';
 
 header('Content-Type: application/json');

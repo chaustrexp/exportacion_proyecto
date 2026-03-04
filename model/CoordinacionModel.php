@@ -16,7 +16,7 @@
  * @package Models
  */
 
-require_once __DIR__ . '/../conexion.php';
+require_once __DIR__ . '/../config/conexion.php';
 
 /**
  * Class CoordinacionModel

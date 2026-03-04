@@ -194,8 +194,35 @@ $pageTitle = 'Mi Dashboard - Instructor';
     
     <div class="main-content">
         <div class="instructor-header">
-            <h1>👋 Bienvenido, <?php echo htmlspecialchars($instructor['inst_nombres'] ?? 'Instructor'); ?></h1>
-            <p>Este es tu panel de control personal. Aquí puedes ver tus fichas y asignaciones.</p>
+            <?php if ($instructor_info['is_owner']): ?>
+                <h1>👋 Bienvenido, <?php echo htmlspecialchars($instructor_info['inst_nombres']); ?></h1>
+                <p>Este es tu panel de control personal. Aquí puedes ver tus fichas y asignaciones.</p>
+            <?php else: ?>
+                <h1>👁️ Viendo horario de: <?php echo htmlspecialchars($instructor_info['inst_nombres']); ?></h1>
+                <p>Estás visualizando el panel de control y cronograma de este instructor.</p>
+            <?php endif; ?>
+            
+            <form method="GET" action="<?php echo BASE_PATH; ?>" style="margin-top: 20px;">
+                <input type="hidden" name="controller" value="instructor_dashboard">
+                <input type="hidden" name="action" value="index">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="view_instructor_id" style="font-weight: 600;">Ver agenda de:</label>
+                    <select name="view_instructor_id" id="view_instructor_id" class="form-control" style="max-width: 300px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" onchange="this.form.submit()">
+                        <option value="<?php echo $_SESSION['instructor_id']; ?>" <?php echo ($view_instructor_id == $_SESSION['instructor_id']) ? 'selected' : ''; ?>>
+                            Mis Asignaciones (<?php echo htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario_nombre']); ?>)
+                        </option>
+                        <optgroup label="Otros Instructores">
+                        <?php foreach ($instructores as $inst): ?>
+                            <?php if ($inst['inst_id'] != $_SESSION['instructor_id']): ?>
+                                <option value="<?php echo $inst['inst_id']; ?>" <?php echo ($view_instructor_id == $inst['inst_id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($inst['inst_nombres'] . ' ' . $inst['inst_apellidos']); ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        </optgroup>
+                    </select>
+                </div>
+            </form>
         </div>
         
         <!-- Estadísticas -->
@@ -240,7 +267,7 @@ $pageTitle = 'Mi Dashboard - Instructor';
                 <?php endforeach; ?>
                 
                 <?php if (count($fichas) > 5): ?>
-                    <a href="<?php echo BASE_PATH; ?>?controller=instructor_dashboard&action=misFichas" class="btn-ver-mas">
+                    <a href="<?php echo BASE_PATH; ?>?controller=instructor_dashboard&action=misFichas&view_instructor_id=<?php echo $view_instructor_id; ?>" class="btn-ver-mas">
                         Ver todas mis fichas (<?php echo count($fichas); ?>)
                     </a>
                 <?php endif; ?>
@@ -276,7 +303,7 @@ $pageTitle = 'Mi Dashboard - Instructor';
                     </div>
                 <?php endforeach; ?>
                 
-                <a href="<?php echo BASE_PATH; ?>?controller=instructor_dashboard&action=misAsignaciones" class="btn-ver-mas">
+                <a href="<?php echo BASE_PATH; ?>?controller=instructor_dashboard&action=misAsignaciones&view_instructor_id=<?php echo $view_instructor_id; ?>" class="btn-ver-mas">
                     Ver todas mis asignaciones
                 </a>
             <?php else: ?>
@@ -391,7 +418,7 @@ $pageTitle = 'Mi Dashboard - Instructor';
         });
 
         function fetchFilteredCalendar() {
-            fetch(`${BASE_PATH}?controller=asignacion&action=getCalendar&month=${currentMonth + 1}&year=${currentYear}`)
+            fetch(`${BASE_PATH}?controller=asignacion&action=getCalendar&month=${currentMonth + 1}&year=${currentYear}&instructor_id=<?php echo $view_instructor_id; ?>`)
                 .then(res => res.json())
                 .then(data => {
                     asignaciones.length = 0;

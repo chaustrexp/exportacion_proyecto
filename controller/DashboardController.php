@@ -65,21 +65,43 @@ class DashboardController extends BaseController {
         
         try {
             if ($rol === 'Instructor') {
-                // Estadísticas filtradas para el instructor
-                $totalFichas = $this->asignacionModel->countFichasByInstructor($instructor_id);
-                $totalAsignaciones = $this->asignacionModel->countByInstructor($instructor_id);
-                $asignacionesActivas = $this->asignacionModel->countActivasByInstructor($instructor_id);
-                $asignacionesFinalizadas = $this->asignacionModel->countFinalizadasByInstructor($instructor_id);
-                $asignacionesNoActivas = $this->asignacionModel->countNoActivasByInstructor($instructor_id);
+                // Determinar qué instructor estamos viendo
+                $view_instructor_id = isset($_GET['view_instructor_id']) ? (int)$_GET['view_instructor_id'] : $instructor_id;
+                error_log("DASHBOARD_DEBUG: Instructor Role. session_instructor_id: {$instructor_id}, view_instructor_id: {$view_instructor_id}");
+                
+                // Obtener la lista de instructores para el selector
+                $instructores = $this->instructorModel->getActivos();
+                
+                if ($view_instructor_id == $instructor_id) {
+                    $instructor_info = [
+                        'inst_id' => $instructor_id,
+                        'inst_nombres' => $_SESSION['usuario_nombre'] ?? $_SESSION['nombre'],
+                        'is_owner' => true
+                    ];
+                } else {
+                    $viewed_instructor = $this->instructorModel->getById($view_instructor_id);
+                    $instructor_info = [
+                        'inst_id' => $view_instructor_id,
+                        'inst_nombres' => $viewed_instructor ? $viewed_instructor['inst_nombres'] . ' ' . $viewed_instructor['inst_apellidos'] : 'Instructor Desconocido',
+                        'is_owner' => false
+                    ];
+                }
+                
+                // Estadísticas filtradas para el instructor visualizado
+                $totalFichas = $this->asignacionModel->countFichasByInstructor($view_instructor_id);
+                $totalAsignaciones = $this->asignacionModel->countByInstructor($view_instructor_id);
+                $asignacionesActivas = $this->asignacionModel->countActivasByInstructor($view_instructor_id);
+                $asignacionesFinalizadas = $this->asignacionModel->countFinalizadasByInstructor($view_instructor_id);
+                $asignacionesNoActivas = $this->asignacionModel->countNoActivasByInstructor($view_instructor_id);
                 
                 // Obtener últimas asignaciones del instructor
-                $ultimasAsignaciones = $this->asignacionModel->getRecentByInstructor($instructor_id, 5);
+                $ultimasAsignaciones = $this->asignacionModel->getRecentByInstructor($view_instructor_id, 5);
                 
                 // Próxima clase (la primera en el futuro)
                 $proximaClase = !empty($ultimasAsignaciones) ? $ultimasAsignaciones[0] : null;
                 
                 // Obtener asignaciones para el calendario (filtradas)
-                $asignacionesCalendario = $this->asignacionModel->getForCalendar(null, null, $instructor_id);
+                $asignacionesCalendario = $this->asignacionModel->getForCalendar(null, null, $view_instructor_id);
             } elseif ($rol === 'Coordinador') {
                 // Estadísticas globales pero con enfoque en gestión para el Coordinador
                 $totalProgramas = $this->programaModel->count();

@@ -1,27 +1,45 @@
 <div class="main-content">
     <!-- Header del Dashboard -->
-    <div style="padding: 24px 32px;">
+    <div style="padding: 16px 0;">
         <?php if ($rol === 'Instructor'): ?>
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
                 <div>
-                    <h1 style="font-size: 32px; font-weight: 800; color: #1f2937; margin: 0 0 8px; letter-spacing: -1px;">
-                        Bienvenido, <?php echo $_SESSION['usuario_nombre'] ?? 'Usuario'; ?>
-                    </h1>
-                    <p style="font-size: 16px; color: #667085; font-weight: 500; margin: 0;">
-                        Este es tu resumen personal de labores académicas
-                    </p>
+                    <?php if (isset($instructor_info) && $instructor_info['is_owner']): ?>
+                        <h1 style="font-size: 32px; font-weight: 800; color: #1f2937; margin: 0 0 8px; letter-spacing: -1px;">
+                            Bienvenido, <?php echo htmlspecialchars($instructor_info['inst_nombres']); ?>
+                        </h1>
+                        <p style="font-size: 16px; color: #667085; font-weight: 500; margin: 0;">
+                            Este es tu resumen personal de labores académicas
+                        </p>
+                    <?php else: ?>
+                        <h1 style="font-size: 32px; font-weight: 800; color: #1f2937; margin: 0 0 8px; letter-spacing: -1px;">
+                            👁️ Viendo horario de: <?php echo htmlspecialchars($instructor_info['inst_nombres']); ?>
+                        </h1>
+                        <p style="font-size: 16px; color: #667085; font-weight: 500; margin: 0;">
+                            Estás visualizando el panel de control y cronograma de este instructor.
+                        </p>
+                    <?php endif; ?>
                 </div>
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <div style="width: 40px; height: 40px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #e5e7eb;">
-                        <i data-lucide="bell" style="width: 20px; height: 20px; color: #374151;"></i>
+                
+                <form method="GET" action="<?php echo BASE_PATH; ?>dashboard/index" style="background: white; padding: 12px 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <label for="view_instructor_id" style="font-weight: 600; color: #374151; font-size: 14px;">Ver agenda de:</label>
+                        <select name="view_instructor_id" id="view_instructor_id" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; color: #1f2937; outline: none; cursor: pointer; min-width: 250px;" onchange="this.form.submit()">
+                            <option value="<?php echo $_SESSION['instructor_id']; ?>" <?php echo (isset($view_instructor_id) && $view_instructor_id == $_SESSION['instructor_id']) ? 'selected' : ''; ?>>
+                                Mis Asignaciones (<?php echo htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario_nombre']); ?>)
+                            </option>
+                            <optgroup label="Otros Instructores">
+                            <?php foreach ($instructores as $inst): ?>
+                                <?php if ($inst['inst_id'] != $_SESSION['instructor_id']): ?>
+                                    <option value="<?php echo $inst['inst_id']; ?>" <?php echo (isset($view_instructor_id) && $view_instructor_id == $inst['inst_id']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($inst['inst_nombres'] . ' ' . $inst['inst_apellidos']); ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            </optgroup>
+                        </select>
                     </div>
-                    <div style="width: 40px; height: 40px; background: #39A900; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; border: 2px solid white; box-shadow: 0 0 0 1px #e5e7eb;">
-                        <?php 
-                            $nombres = explode(' ', $_SESSION['usuario_nombre'] ?? 'U');
-                            echo strtoupper(substr($nombres[0], 0, 1) . (isset($nombres[1]) ? substr($nombres[1], 0, 1) : ''));
-                        ?>
-                    </div>
-                </div>
+                </form>
             </div>
         <?php else: ?>
             <div style="background: #e8f5e9; padding: 32px; border-radius: 24px; border: 1px solid #c3e6cb; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center;">

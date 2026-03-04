@@ -19,7 +19,7 @@
                     </p>
                 </div>
             </div>
-            <a href="<?php echo BASE_PATH . ($esInstructor ? 'instructor_dashboard/misAsignaciones' : 'asignacion/index'); ?>" style="font-size: 14px; font-weight: 600; color: #39A900; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+            <a href="<?php echo BASE_PATH . ($esInstructor ? 'instructor_dashboard/misAsignaciones?view_instructor_id=' . (isset($view_instructor_id) ? $view_instructor_id : $_SESSION['instructor_id']) : 'asignacion/index'); ?>" style="font-size: 14px; font-weight: 600; color: #39A900; text-decoration: none; display: flex; align-items: center; gap: 6px;">
                 Ver todas <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
             </a>
         </div>
@@ -91,9 +91,9 @@
         
         <!-- Pie de tabla: Cargar más -->
         <div style="padding: 16px; border-top: 1px solid #f3f4f6; display: flex; justify-content: center; background: #fafafa;">
-            <button style="background: none; border: none; font-size: 13px; font-weight: 600; color: #667085; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#1f2937'" onmouseout="this.style.color='#667085'">
+            <a href="<?php echo BASE_PATH . ($esInstructor ? 'instructor_dashboard/misAsignaciones?view_instructor_id=' . (isset($view_instructor_id) ? $view_instructor_id : $_SESSION['instructor_id']) : 'asignacion/index'); ?>" style="text-decoration: none; background: none; border: none; font-size: 13px; font-weight: 600; color: #667085; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#1f2937'" onmouseout="this.style.color='#667085'">
                 Cargar más resultados <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
-            </button>
+            </a>
         </div>
     </div>
 </div>

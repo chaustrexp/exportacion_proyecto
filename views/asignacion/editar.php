@@ -71,7 +71,7 @@
             
             <div class="btn-group">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
-                <a href="index.php" class="btn btn-secondary">Cancelar</a>
+                <a href="<?php echo BASE_PATH; ?>asignacion/index" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>

@@ -40,14 +40,14 @@
                 <div><?php echo e(safe($registro, 'asig_fecha_fin', safe($registro, 'fecha_fin'))); ?></div>
             </div>
             <div class="btn-group" style="margin-top: 20px;">
-                <a href="editar.php?id=<?php echo e(safe($registro, 'asig_id', safe($registro, 'ASIG_ID', safe($registro, 'id')))); ?>" class="btn btn-primary">Editar</a>
-                <a href="index.php" class="btn btn-secondary">Volver</a>
+                <a href="<?php echo BASE_PATH; ?>asignacion/editar/<?php echo e(safe($registro, 'asig_id', safe($registro, 'ASIG_ID', safe($registro, 'id')))); ?>" class="btn btn-primary">Editar</a>
+                <a href="<?php echo BASE_PATH; ?>asignacion/index" class="btn btn-secondary">Volver</a>
             </div>
         <?php else: ?>
             <h2>Registro no encontrado</h2>
             <p style="padding: 20px; text-align: center; color: #666;">No se encontraron datos para esta asignación.</p>
             <div class="btn-group" style="margin-top: 20px; justify-content: center;">
-                <a href="index.php" class="btn btn-secondary">Volver al Listado</a>
+                <a href="<?php echo BASE_PATH; ?>asignacion/index" class="btn btn-secondary">Volver al Listado</a>
             </div>
         <?php endif; ?>
     </div>

@@ -121,7 +121,7 @@
                     <i data-lucide="edit" style="width: 18px; height: 18px;"></i>
                     Editar
                 </a>
-                <button onclick="confirmarEliminacion(<?php echo safeHtml($registro, 'inscomp_id'); ?>, 'instru_competencia')" class="btn btn-danger">
+                <button onclick="confirmarAsignacionEliminacion(<?php echo safeHtml($registro, 'inscomp_id'); ?>)" class="btn btn-danger">
                     <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
                     Eliminar
                 </button>
@@ -137,6 +137,12 @@
 <script>
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
+    }
+    
+    function confirmarAsignacionEliminacion(id) {
+        if (confirm('¿Está seguro de eliminar esta asignación de competencia?')) {
+            window.location.href = `<?php echo BASE_PATH; ?>instru_competencia/eliminar?id=${id}`;
+        }
     }
 </script>
 

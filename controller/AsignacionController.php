@@ -179,9 +179,7 @@ class AsignacionController extends BaseController {
     /**
      * Ver detalle de una asignación
      */
-    public function ver() {
-        $id = $this->get('id', 0);
-        
+    public function ver($id = 0) {
         if (!$id) {
             $this->redirect(BASE_PATH . 'asignacion');
         }
@@ -203,10 +201,8 @@ class AsignacionController extends BaseController {
     /**
      * Mostrar formulario de edición
      */
-    public function editar() {
+    public function editar($id = 0) {
         verificarRol(['Administrador', 'Coordinador']);
-        $id = $this->get('id', 0);
-        
         if (!$id) {
             $this->redirect(BASE_PATH . 'asignacion');
         }
@@ -314,10 +310,8 @@ class AsignacionController extends BaseController {
     /**
      * Eliminar asignación
      */
-    public function eliminar() {
+    public function eliminar($id = 0) {
         verificarRol(['Administrador', 'Coordinador']);
-        $id = $this->get('id', 0);
-        
         if (!$id) {
             $this->redirect(BASE_PATH . 'asignacion');
         }
@@ -439,11 +433,11 @@ class AsignacionController extends BaseController {
         $year = $this->get('year', date('Y'));
         
         // Determinar si filtrar por instructor
-        $instructor_id = null;
+        $instructor_id = $this->get('instructor_id', null);
         $rol = $_SESSION['rol'] ?? $_SESSION['usuario_rol'] ?? '';
         
-        if ($rol === 'Instructor') {
-            $instructor_id = $_SESSION['id'] ?? $_SESSION['usuario_id'] ?? null;
+        if ($rol === 'Instructor' && empty($instructor_id)) {
+            $instructor_id = $_SESSION['instructor_id'] ?? $_SESSION['id'] ?? $_SESSION['usuario_id'] ?? null;
         }
         
         try {

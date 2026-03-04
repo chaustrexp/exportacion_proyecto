@@ -19,7 +19,7 @@ class SedeController extends BaseController {
      * Listar todas las sedes
      */
     public function index() {
-        verificarRol(['Administrador', 'Coordinador']);
+        verificarRol(['Administrador']);
         $registros = $this->model->getAll();
         
         $this->render('index', [

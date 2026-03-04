@@ -54,7 +54,7 @@ class InstructorController extends BaseController {
      * Solo accesible por Administrador y Coordinador.
      */
     public function index() {
-        verificarRol(['Administrador', 'Coordinador']); // Restringir acceso por rol
+        verificarRol(['Administrador']); // Restringir acceso por rol
         $registros = $this->model->getAll(); // Obtener todos los instructores con su centro
 
         $data = [

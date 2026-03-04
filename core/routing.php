@@ -24,6 +24,51 @@ if (!$isAuthRoute) {
     require_once __DIR__ . '/../auth/check_auth.php';
 }
 
+// BLOQUEO DE SEGURIDAD GLOBAL: Restringir acceso por Roles
+// Evita accesos no autorizados a operaciones CRUD omitidas en algunos controladores
+if (!$isAuthRoute && isset($_SESSION['usuario_rol'])) {
+    // Si ya estamos en la página de denegado, omitir chequeos para evitar bucle infinito
+    if (isset($_GET['error']) && $_GET['error'] === 'acceso_denegado') {
+        // Permitir renderizar (redirección a dashboard se manejará más abajo por default routeo)
+        $accesoPermitido = true;
+    } else {
+        $rol = $_SESSION['usuario_rol'];
+        $requestModule = explode('/', str_replace(BASE_PATH, '', $request))[0] ?? 'dashboard';
+        $requestModule = str_replace('.php', '', strtok($requestModule, '?'));
+        $requestAction = explode('/', str_replace(BASE_PATH, '', $request))[1] ?? 'index';
+        $requestAction = str_replace('.php', '', strtok($requestAction, '?'));
+        
+        // Reglas restrictivas para el Instructor
+        if ($rol === 'Instructor') {
+            $modulosPermitidos = ['instructor_dashboard', 'auth', 'index', 'index.php'];
+            $accesoPermitido = in_array($requestModule, $modulosPermitidos) || 
+                              ($requestModule === 'asignacion' && $requestAction === 'getCalendar') || 
+                              (empty($requestModule));
+                              
+            if (!$accesoPermitido) {
+                header('Location: ' . BASE_PATH . 'index.php?error=acceso_denegado');
+                exit;
+            }
+        }
+        
+        // Reglas restrictivas para el Coordinador (Solo acceso Académico)
+        if ($rol === 'Coordinador') {
+            $modulosPermitidos = [
+                'dashboard', 'auth', 'index', 'index.php',
+                'ficha', 'asignacion', 'detalle_asignacion', 
+                'instru_competencia', 'competencia_programa'
+            ];
+            
+            $accesoPermitido = in_array($requestModule, $modulosPermitidos) || empty($requestModule);
+                              
+            if (!$accesoPermitido) {
+                header('Location: ' . BASE_PATH . 'index.php?error=acceso_denegado');
+                exit;
+            }
+        }
+    }
+}
+
 // Si la ruta está vacía o es 'index.php', redirigir según el rol
 if (empty($route) || $route === 'index.php') {
     // Redirigir según el rol del usuario

@@ -18,7 +18,7 @@ class TituloProgramaController extends BaseController {
      * Listar todos los títulos
      */
     public function index() {
-        verificarRol(['Administrador', 'Coordinador']);
+        verificarRol(['Administrador']);
         $registros = $this->model->getAll();
         
         $data = [

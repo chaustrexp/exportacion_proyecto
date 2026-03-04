@@ -10,7 +10,7 @@ class CompetenciaController extends BaseController {
     }
     
     public function index() {
-        verificarRol(['Administrador', 'Coordinador']);
+        verificarRol(['Administrador']);
         $data = [
             'pageTitle' => 'Gestión de Competencias',
             'registros' => $this->model->getAll(),

@@ -17,7 +17,7 @@ class ProgramaController extends BaseController {
      * Listar todos los programas
      */
     public function index() {
-        verificarRol(['Administrador', 'Coordinador']);
+        verificarRol(['Administrador']);
         $pageTitle = 'Gestión de Programas';
         $registros = $this->model->getAll();
         $mensaje = $this->getFlashMessage();
